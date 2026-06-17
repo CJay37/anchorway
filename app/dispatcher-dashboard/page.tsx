@@ -29,7 +29,7 @@ setStatus('Could not load live GPS');
 
 useEffect(() => {
 loadLocation();
-const timer = setInterval(loadLocation, 5000);
+const timer = setInterval(loadLocation, 2000);
 return () => clearInterval(timer);
 }, []);
 
