@@ -13,7 +13,10 @@ params,
 }: {
 params: { trip_reference: string };
 }) {
-const tripReference = params.trip_reference;
+const tripReference =
+typeof window !== "undefined"
+? window.location.pathname.split("/").pop() || ""
+: params.trip_reference;
 
 const [gpsStatus, setGpsStatus] = useState('GPS not started');
 const [latitude, setLatitude] = useState('');
