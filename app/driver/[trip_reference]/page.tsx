@@ -3,15 +3,44 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+const LOCATION_URL =
+'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-driver-location';
+
 export default function DriverPage({
 params,
 }: {
 params: { trip_reference: string };
 }) {
 const tripReference = params.trip_reference;
+
 const [gpsStatus, setGpsStatus] = useState('GPS not started');
 const [latitude, setLatitude] = useState('');
 const [longitude, setLongitude] = useState('');
+const [lastSent, setLastSent] = useState('');
+
+async function sendLocation(lat: number, lng: number) {
+const res = await fetch(LOCATION_URL, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify({
+trip_reference: tripReference,
+driver_name: 'Driver',
+latitude: lat,
+longitude: lng,
+eta: 'Updating',
+}),
+});
+
+const json = await res.json();
+
+if (!json.success) {
+throw new Error(json.message || 'Location upload failed');
+}
+
+setLastSent(new Date().toLocaleTimeString());
+}
 
 function startGPS() {
 if (!navigator.geolocation) {
@@ -21,14 +50,29 @@ return;
 
 setGpsStatus('Requesting GPS permission...');
 
-navigator.geolocation.getCurrentPosition(
-(position) => {
-setLatitude(String(position.coords.latitude));
-setLongitude(String(position.coords.longitude));
-setGpsStatus('GPS connected');
+navigator.geolocation.watchPosition(
+async (position) => {
+const lat = position.coords.latitude;
+const lng = position.coords.longitude;
+
+setLatitude(String(lat));
+setLongitude(String(lng));
+setGpsStatus('GPS connected - uploading live location');
+
+try {
+await sendLocation(lat, lng);
+setGpsStatus('GPS connected - live location sent');
+} catch (err: any) {
+setGpsStatus(err.message || 'GPS connected but upload failed');
+}
 },
 () => {
 setGpsStatus('GPS permission denied or unavailable');
+},
+{
+enableHighAccuracy: true,
+maximumAge: 0,
+timeout: 10000,
 }
 );
 }
@@ -56,6 +100,7 @@ AnchorWay
 <p><strong>Status:</strong> {gpsStatus}</p>
 <p><strong>Latitude:</strong> {latitude || 'Waiting...'}</p>
 <p><strong>Longitude:</strong> {longitude || 'Waiting...'}</p>
+<p><strong>Last Sent:</strong> {lastSent || 'Not sent yet'}</p>
 
 <div className="statusGrid">
 <button onClick={startGPS}>▶ Start GPS</button>
