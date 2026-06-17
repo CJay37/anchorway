@@ -11,7 +11,10 @@ export default function TrackPage({ params }: { params: { trip_reference: string
   const [data,setData]=useState<Tracking|null>(null);
   const [loading,setLoading]=useState(true);
   const [error,setError]=useState('');
-  const ref = decodeURIComponent(params.trip_reference);
+  const ref =
+typeof window !== "undefined"
+? decodeURIComponent(window.location.pathname.split("/").pop() || "")
+: ""
 
   useEffect(()=>{
     async function load(){
