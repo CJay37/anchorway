@@ -21,14 +21,31 @@ const statuses = [
 'Completed',
 ];
 
+const startingTrips = [
+{
+trip_reference: 'BW-3608',
+patient: 'John Smith',
+pickup: '37 Main Street',
+destination: '123 Main Street',
+eta: '12 minutes',
+status: 'Driver En Route',
+},
+{
+trip_reference: 'BW-5445',
+patient: 'Test Patient',
+pickup: '1595 Metropolitan Avenue',
+destination: 'Mount Sinai',
+eta: '18 minutes',
+status: 'Requested',
+},
+];
+
 export default function DispatcherDashboard() {
-const [tripReference, setTripReference] = useState('BW-3608');
-const [eta, setEta] = useState('12 minutes');
-const [selectedStatus, setSelectedStatus] = useState('Driver En Route');
+const [trips, setTrips] = useState(startingTrips);
+const [selectedTrip, setSelectedTrip] = useState(startingTrips[0]);
 const [message, setMessage] = useState('');
 
-async function updateStatus(status: string) {
-setSelectedStatus(status);
+async function updateTrip(status: string) {
 setMessage('Updating...');
 
 try {
@@ -40,10 +57,10 @@ apikey: ANON_KEY,
 Authorization: `Bearer ${ANON_KEY}`,
 },
 body: JSON.stringify({
-trip_reference: tripReference,
+trip_reference: selectedTrip.trip_reference,
 current_status: status,
 current_step: status,
-eta,
+eta: selectedTrip.eta,
 visible_to_patient: true,
 }),
 });
@@ -54,7 +71,15 @@ if (!json.success) {
 throw new Error(json.message || 'Update failed');
 }
 
-setMessage(`Updated to ${status}`);
+const updatedTrips = trips.map((trip) =>
+trip.trip_reference === selectedTrip.trip_reference
+? { ...trip, status }
+: trip
+);
+
+setTrips(updatedTrips);
+setSelectedTrip({ ...selectedTrip, status });
+setMessage(`Updated ${selectedTrip.trip_reference} to ${status}`);
 } catch (err: any) {
 setMessage(err.message || 'Something went wrong');
 }
@@ -68,63 +93,86 @@ return (
 AnchorWay
 </Link>
 
-<Link href={`/track/${tripReference}`} className="topLink">
+<Link href={`/track/${selectedTrip.trip_reference}`} className="topLink">
 View Public Tracker
 </Link>
 </nav>
 
 <section className="dashboardHero">
 <div>
-<span className="eyebrow">Dispatcher Control</span>
-<h1>Update transport status</h1>
+<span className="eyebrow">Live Dispatcher Queue</span>
+<h1>Active transports</h1>
 <p>
-Change trip progress here. The public tracking page will update for
-facilities, patients, and families.
+View active trips, select a transport, and update its public status
+in one place.
 </p>
 </div>
 
 <div className="summaryCard">
-<span>Current Status</span>
-<strong>{selectedStatus}</strong>
-<p>ETA: {eta}</p>
+<span>Selected Trip</span>
+<strong>{selectedTrip.trip_reference}</strong>
+<p>{selectedTrip.status}</p>
 </div>
 </section>
 
 <section className="controlPanel">
-<div className="fieldGrid">
-<label>
-Trip Reference
-<input
-value={tripReference}
-onChange={(e) => setTripReference(e.target.value)}
-placeholder="BW-3608"
-/>
-</label>
+<table className="dispatchTable">
+<thead>
+<tr>
+<th>Trip</th>
+<th>Patient</th>
+<th>Pickup</th>
+<th>Destination</th>
+<th>ETA</th>
+<th>Status</th>
+</tr>
+</thead>
 
-<label>
-ETA
-<input
-value={eta}
-onChange={(e) => setEta(e.target.value)}
-placeholder="12 minutes"
-/>
-</label>
-</div>
+<tbody>
+{trips.map((trip) => (
+<tr
+key={trip.trip_reference}
+onClick={() => setSelectedTrip(trip)}
+className={
+selectedTrip.trip_reference === trip.trip_reference
+? 'selectedRow'
+: ''
+}
+>
+<td>{trip.trip_reference}</td>
+<td>{trip.patient}</td>
+<td>{trip.pickup}</td>
+<td>{trip.destination}</td>
+<td>{trip.eta}</td>
+<td>{trip.status}</td>
+</tr>
+))}
+</tbody>
+</table>
+
+<div className="detailPanel">
+<h2>{selectedTrip.trip_reference}</h2>
+<p>
+<strong>{selectedTrip.patient}</strong>
+</p>
+<p>{selectedTrip.pickup} → {selectedTrip.destination}</p>
+<p>ETA: {selectedTrip.eta}</p>
 
 <div className="statusGrid">
 {statuses.map((status) => (
 <button
 key={status}
-onClick={() => updateStatus(status)}
-className={selectedStatus === status ? 'activeStatus' : ''}
+onClick={() => updateTrip(status)}
+className={selectedTrip.status === status ? 'activeStatus' : ''}
 >
-{selectedStatus === status ? '● ' : ''}
+{selectedTrip.status === status ? '● ' : ''}
 {status}
 </button>
 ))}
 </div>
 
 {message && <div className="messageBox">{message}</div>}
+</div>
 </section>
 </main>
 );
