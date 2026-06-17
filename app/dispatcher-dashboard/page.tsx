@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const API_URL =
-process.env.NEXT_PUBLIC_TRACKING_API_URL ||
-'PASTE_SUPABASE_GET_PUBLIC_TRACKING_URL_HERE';
+const UPDATE_URL =
+process.env.NEXT_PUBLIC_UPDATE_TRANSPORT_STATUS_URL ||
+'https://xjqxtgejkrarIteximpy.supabase.co/functions/v1/update-transport-status';
 
-const SUPABASE_ANON_KEY =
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 const statuses = [
 'Requested',
@@ -23,90 +22,109 @@ const statuses = [
 ];
 
 export default function DispatcherDashboard() {
-const [tripRef, setTripRef] = useState('BW-3608');
+const [tripReference, setTripReference] = useState('BW-3608');
 const [eta, setEta] = useState('12 minutes');
+const [selectedStatus, setSelectedStatus] = useState('Driver En Route');
 const [message, setMessage] = useState('');
 
-const restUrl = API_URL.replace('/functions/v1/get-public-tracking', '/rest/v1');
-
 async function updateStatus(status: string) {
+setSelectedStatus(status);
 setMessage('Updating...');
 
-const res = await fetch(
-`${restUrl}/transport_status?trip_reference=eq.${tripRef}`,
-{
-method: 'PATCH',
+try {
+const res = await fetch(UPDATE_URL, {
+method: 'POST',
 headers: {
-apikey: SUPABASE_ANON_KEY,
-Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
 'Content-Type': 'application/json',
-Prefer: 'return=representation',
+apikey: ANON_KEY,
+Authorization: `Bearer ${ANON_KEY}`,
 },
 body: JSON.stringify({
+trip_reference: tripReference,
 current_status: status,
 current_step: status,
 eta,
-updated_at: new Date().toISOString(),
-last_status_update_timestamp: new Date().toISOString(),
 visible_to_patient: true,
 }),
-}
-);
+});
 
-if (!res.ok) {
-const text = await res.text();
-setMessage(`Update failed: ${text}`);
-return;
+const json = await res.json();
+
+if (!json.success) {
+throw new Error(json.message || 'Update failed');
 }
 
-setMessage(`Updated ${tripRef} to ${status}`);
+setMessage(`Updated to ${status}`);
+} catch (err: any) {
+setMessage(err.message || 'Something went wrong');
+}
 }
 
 return (
-<main className="dashboard">
+<main className="dashboardPage">
 <nav className="nav">
 <Link href="/" className="brand">
 <span className="logo">⚓</span>
-<span>AnchorWay</span>
+AnchorWay
 </Link>
-<Link href={`/track/${tripRef}`} className="btn secondary">
+
+<Link href={`/track/${tripReference}`} className="topLink">
 View Public Tracker
 </Link>
 </nav>
 
-<section className="dashboardWrap">
-<div className="panel">
-<p className="statusPill">Dispatcher Control</p>
+<section className="dashboardHero">
+<div>
+<span className="eyebrow">Dispatcher Control</span>
 <h1>Update transport status</h1>
-<p className="lead">
-Change the trip status here. The public tracking page will reflect
-the update after refresh or auto-check.
+<p>
+Change trip progress here. The public tracking page will update for
+facilities, patients, and families.
 </p>
+</div>
 
-<label>Trip Reference</label>
+<div className="summaryCard">
+<span>Current Status</span>
+<strong>{selectedStatus}</strong>
+<p>ETA: {eta}</p>
+</div>
+</section>
+
+<section className="controlPanel">
+<div className="fieldGrid">
+<label>
+Trip Reference
 <input
-value={tripRef}
-onChange={(e) => setTripRef(e.target.value)}
+value={tripReference}
+onChange={(e) => setTripReference(e.target.value)}
 placeholder="BW-3608"
 />
+</label>
 
-<label>ETA</label>
+<label>
+ETA
 <input
 value={eta}
 onChange={(e) => setEta(e.target.value)}
 placeholder="12 minutes"
 />
+</label>
+</div>
 
-<div className="buttonGrid">
+<div className="statusGrid">
 {statuses.map((status) => (
-<button key={status} onClick={() => updateStatus(status)}>
+<button
+key={status}
+onClick={() => updateStatus(status)}
+className={selectedStatus === status ? 'activeStatus' : ''}
+>
+{selectedStatus === status ? '● ' : ''}
 {status}
 </button>
 ))}
 </div>
 
-{message && <p className="message">{message}</p>}
-</div>
+{message && <div className="messageBox">{message}</div>}
 </section>
 </main>
 );
