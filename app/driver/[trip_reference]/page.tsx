@@ -108,7 +108,17 @@ AnchorWay
 <p><strong>Latitude:</strong> {latitude || 'Waiting...'}</p>
 <p><strong>Longitude:</strong> {longitude || 'Waiting...'}</p>
 <p><strong>Last Sent:</strong> {lastSent || 'Not sent yet'}</p>
-
+{latitude && longitude && (
+<iframe
+title="Driver Location Map"
+width="100%"
+height="260"
+style={{ border: 0, borderRadius: '18px', marginTop: '18px' }}
+loading="lazy"
+allowFullScreen
+src={`https://www.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`}
+/>
+)}
 <div className="statusGrid">
 <button onClick={startGPS}>▶ Start GPS</button>
 <button>👤 Patient Onboard</button>
