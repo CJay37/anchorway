@@ -19,10 +19,10 @@ const [longitude, setLongitude] = useState('');
 const [lastSent, setLastSent] = useState('');
 
 async function sendLocation(lat: number, lng: number) {
-const res = await fetch(LOCATION_URL, {
-method: 'POST',
 headers: {
 'Content-Type': 'application/json',
+'apikey': 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
+'Authorization': 'Bearer sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
 },
 body: JSON.stringify({
 trip_reference: tripReference,
