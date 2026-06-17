@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+const LOCATION_URL =
+'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-driver-location';
+
 export default function DriverPage({
 params,
 }: {
@@ -13,6 +16,20 @@ const [gpsStatus, setGpsStatus] = useState('GPS not started');
 const [latitude, setLatitude] = useState('');
 const [longitude, setLongitude] = useState('');
 
+async function sendLocation(lat: number, lng: number) {
+await fetch(LOCATION_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+trip_reference: tripReference,
+driver_name: 'Driver',
+latitude: lat,
+longitude: lng,
+eta: 'Updating',
+}),
+});
+}
+
 function startGPS() {
 if (!navigator.geolocation) {
 setGpsStatus('GPS is not supported on this device');
@@ -21,14 +38,24 @@ return;
 
 setGpsStatus('Requesting GPS permission...');
 
-navigator.geolocation.getCurrentPosition(
-(position) => {
-setLatitude(String(position.coords.latitude));
-setLongitude(String(position.coords.longitude));
-setGpsStatus('GPS connected');
+navigator.geolocation.watchPosition(
+async (position) => {
+const lat = position.coords.latitude;
+const lng = position.coords.longitude;
+
+setLatitude(String(lat));
+setLongitude(String(lng));
+setGpsStatus('GPS connected and sharing live location');
+
+await sendLocation(lat, lng);
 },
 () => {
 setGpsStatus('GPS permission denied or unavailable');
+},
+{
+enableHighAccuracy: true,
+maximumAge: 0,
+timeout: 10000,
 }
 );
 }
