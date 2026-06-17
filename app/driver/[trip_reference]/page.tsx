@@ -6,6 +6,8 @@ import Link from 'next/link';
 const LOCATION_URL =
 'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-driver-location';
 
+const SUPABASE_KEY = "sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3";
+
 export default function DriverPage({
 params,
 }: {
@@ -19,10 +21,12 @@ const [longitude, setLongitude] = useState('');
 const [lastSent, setLastSent] = useState('');
 
 async function sendLocation(lat: number, lng: number) {
+const res = await fetch(LOCATION_URL, {
+method: 'POST',
 headers: {
 'Content-Type': 'application/json',
-'apikey': 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
-'Authorization': 'Bearer sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
+apikey: SUPABASE_KEY,
+Authorization: `Bearer ${SUPABASE_KEY}`,
 },
 body: JSON.stringify({
 trip_reference: tripReference,
@@ -57,7 +61,7 @@ const lng = position.coords.longitude;
 
 setLatitude(String(lat));
 setLongitude(String(lng));
-setGpsStatus('GPS connected - uploading live location');
+setGpsStatus('GPS connected - uploading location');
 
 try {
 await sendLocation(lat, lng);
