@@ -1,0 +1,68 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+
+export default function DriverPage({
+params,
+}: {
+params: { trip_reference: string };
+}) {
+const tripReference = params.trip_reference;
+const [gpsStatus, setGpsStatus] = useState('GPS not started');
+const [latitude, setLatitude] = useState('');
+const [longitude, setLongitude] = useState('');
+
+function startGPS() {
+if (!navigator.geolocation) {
+setGpsStatus('GPS is not supported on this device');
+return;
+}
+
+setGpsStatus('Requesting GPS permission...');
+
+navigator.geolocation.getCurrentPosition(
+(position) => {
+setLatitude(String(position.coords.latitude));
+setLongitude(String(position.coords.longitude));
+setGpsStatus('GPS connected');
+},
+() => {
+setGpsStatus('GPS permission denied or unavailable');
+}
+);
+}
+
+return (
+<main className="dashboardPage">
+<nav className="nav">
+<Link href="/" className="brand">
+<span className="logo">⚓</span>
+AnchorWay
+</Link>
+</nav>
+
+<section className="dashboardHero">
+<div>
+<span className="eyebrow">Driver GPS Link</span>
+<h1>Driver live location</h1>
+<p>Trip Reference: {tripReference}</p>
+</div>
+</section>
+
+<section className="detailPanel">
+<h2>🚑 AnchorWay Driver</h2>
+
+<p><strong>Status:</strong> {gpsStatus}</p>
+<p><strong>Latitude:</strong> {latitude || 'Waiting...'}</p>
+<p><strong>Longitude:</strong> {longitude || 'Waiting...'}</p>
+
+<div className="statusGrid">
+<button onClick={startGPS}>▶ Start GPS</button>
+<button>👤 Patient Onboard</button>
+<button>🏁 Complete Trip</button>
+</div>
+</section>
+</main>
+);
+}
