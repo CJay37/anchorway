@@ -121,8 +121,18 @@ src={`https://www.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`}
 )}
 <div className="statusGrid">
 <button onClick={startGPS}>▶ Start GPS</button>
-<button>👤 Patient Onboard</button>
-<button>🏁 Complete Trip</button>
+
+<button
+onClick={() => setGpsStatus('Patient onboard')}
+>
+👤 Patient Onboard
+</button>
+
+<button
+onClick={() => setGpsStatus('Completed')}
+>
+🏁 Complete Trip
+</button>
 </div>
 </section>
 </main>
