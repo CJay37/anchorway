@@ -50,6 +50,27 @@ setLastSent(new Date().toLocaleTimeString());
 }
 
 function startGPS() {
+async function updateStatus(status: string) {
+await fetch(
+"https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-transport-status",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+apikey: SUPABASE_KEY,
+Authorization: `Bearer ${SUPABASE_KEY}`,
+},
+body: JSON.stringify({
+trip_reference: tripReference,
+current_status: status,
+current_step: status,
+visible_to_patient: true,
+}),
+}
+);
+
+setGpsStatus(status);
+}
 if (!navigator.geolocation) {
 setGpsStatus('GPS is not supported on this device');
 return;
@@ -123,13 +144,13 @@ src={`https://www.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`}
 <button onClick={startGPS}>▶ Start GPS</button>
 
 <button
-onClick={() => setGpsStatus('Patient onboard')}
+onClick={() => updateStatus("Patient Onboard")}
 >
 👤 Patient Onboard
 </button>
 
 <button
-onClick={() => setGpsStatus('Completed')}
+onClick={() => updateStatus("Trip Complete")}
 >
 🏁 Complete Trip
 </button>
