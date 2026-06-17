@@ -1,11 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+
+const GET_TRIPS_URL =
+process.env.NEXT_PUBLIC_GET_ACTIVE_TRIPS_URL ||
+'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-active-trips';
 
 const UPDATE_URL =
 process.env.NEXT_PUBLIC_UPDATE_TRANSPORT_STATUS_URL ||
-'https://xjqxtgejkrarIteximpy.supabase.co/functions/v1/update-transport-status';
+'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-transport-status';
 
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
@@ -21,31 +25,58 @@ const statuses = [
 'Completed',
 ];
 
-const startingTrips = [
-{
-trip_reference: 'BW-3608',
-patient: 'John Smith',
-pickup: '37 Main Street',
-destination: '123 Main Street',
-eta: '12 minutes',
-status: 'Driver En Route',
-},
-{
-trip_reference: 'BW-5445',
-patient: 'Test Patient',
-pickup: '1595 Metropolitan Avenue',
-destination: 'Mount Sinai',
-eta: '18 minutes',
-status: 'Requested',
-},
-];
+type Trip = {
+trip_reference: string;
+patient: string;
+pickup: string;
+destination: string;
+eta: string;
+status: string;
+};
 
 export default function DispatcherDashboard() {
-const [trips, setTrips] = useState(startingTrips);
-const [selectedTrip, setSelectedTrip] = useState(startingTrips[0]);
+const [trips, setTrips] = useState<Trip[]>([]);
+const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
 const [message, setMessage] = useState('');
+const [loading, setLoading] = useState(true);
+
+async function loadTrips() {
+try {
+const res = await fetch(GET_TRIPS_URL, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+apikey: ANON_KEY,
+Authorization: `Bearer ${ANON_KEY}`,
+},
+});
+
+const json = await res.json();
+
+if (!json.success) throw new Error(json.message || 'Could not load trips');
+
+setTrips(json.trips || []);
+
+if (!selectedTrip && json.trips?.length > 0) {
+setSelectedTrip(json.trips[0]);
+}
+
+setLoading(false);
+} catch (err: any) {
+setMessage(err.message || 'Unable to load trips');
+setLoading(false);
+}
+}
+
+useEffect(() => {
+loadTrips();
+const interval = setInterval(loadTrips, 10000);
+return () => clearInterval(interval);
+}, []);
 
 async function updateTrip(status: string) {
+if (!selectedTrip) return;
+
 setMessage('Updating...');
 
 try {
@@ -67,23 +98,27 @@ visible_to_patient: true,
 
 const json = await res.json();
 
-if (!json.success) {
-throw new Error(json.message || 'Update failed');
-}
+if (!json.success) throw new Error(json.message || 'Update failed');
 
-const updatedTrips = trips.map((trip) =>
+setSelectedTrip({ ...selectedTrip, status });
+
+setTrips((current) =>
+current.map((trip) =>
 trip.trip_reference === selectedTrip.trip_reference
 ? { ...trip, status }
 : trip
+)
 );
 
-setTrips(updatedTrips);
-setSelectedTrip({ ...selectedTrip, status });
 setMessage(`Updated ${selectedTrip.trip_reference} to ${status}`);
 } catch (err: any) {
 setMessage(err.message || 'Something went wrong');
 }
 }
+
+const activeCount = trips.filter((t) => t.status !== 'Completed').length;
+const waitingCount = trips.filter((t) => t.status === 'Requested').length;
+const completedCount = trips.filter((t) => t.status === 'Completed').length;
 
 return (
 <main className="dashboardPage">
@@ -93,27 +128,40 @@ return (
 AnchorWay
 </Link>
 
+{selectedTrip && (
 <Link href={`/track/${selectedTrip.trip_reference}`} className="topLink">
 View Public Tracker
 </Link>
+)}
 </nav>
 
 <section className="dashboardHero">
 <div>
-<span className="eyebrow">Live Dispatcher Queue</span>
-<h1>Active transports</h1>
-<p>
-View active trips, select a transport, and update its public status
-in one place.
-</p>
+<span className="eyebrow">AnchorWay Operations Center</span>
+<h1>Live transport board</h1>
+<p>Every active trip from Supabase appears here automatically.</p>
+</div>
+</section>
+
+<section className="statsGrid">
+<div className="summaryCard">
+<span>Active Trips</span>
+<strong>{activeCount}</strong>
 </div>
 
 <div className="summaryCard">
-<span>Selected Trip</span>
-<strong>{selectedTrip.trip_reference}</strong>
-<p>{selectedTrip.status}</p>
+<span>Waiting Assignment</span>
+<strong>{waitingCount}</strong>
+</div>
+
+<div className="summaryCard">
+<span>Completed</span>
+<strong>{completedCount}</strong>
 </div>
 </section>
+
+{loading && <p>Loading active transports...</p>}
+{message && <div className="messageBox">{message}</div>}
 
 <section className="controlPanel">
 <table className="dispatchTable">
@@ -134,7 +182,7 @@ in one place.
 key={trip.trip_reference}
 onClick={() => setSelectedTrip(trip)}
 className={
-selectedTrip.trip_reference === trip.trip_reference
+selectedTrip?.trip_reference === trip.trip_reference
 ? 'selectedRow'
 : ''
 }
@@ -150,11 +198,10 @@ selectedTrip.trip_reference === trip.trip_reference
 </tbody>
 </table>
 
+{selectedTrip && (
 <div className="detailPanel">
 <h2>{selectedTrip.trip_reference}</h2>
-<p>
-<strong>{selectedTrip.patient}</strong>
-</p>
+<p><strong>{selectedTrip.patient}</strong></p>
 <p>{selectedTrip.pickup} → {selectedTrip.destination}</p>
 <p>ETA: {selectedTrip.eta}</p>
 
@@ -170,9 +217,8 @@ className={selectedTrip.status === status ? 'activeStatus' : ''}
 </button>
 ))}
 </div>
-
-{message && <div className="messageBox">{message}</div>}
 </div>
+)}
 </section>
 </main>
 );
