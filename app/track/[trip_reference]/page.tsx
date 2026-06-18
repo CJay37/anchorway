@@ -72,7 +72,7 @@ return () => clearInterval(timer);
 }
 }, [ref]);
 
-const current = data?.current_step || data?.current_status || '';
+const current = data?.current_status || data?.current_step || '';
 
 const normalize = (value: string) =>
 value.toLowerCase().replace(/[^a-z]/g, '').trim();
