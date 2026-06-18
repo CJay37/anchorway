@@ -81,13 +81,7 @@ const currentIndex = Math.max(
 0,
 stages.findIndex((stage) => normalize(stage) === normalize(current))
 );
-const normalize = (value: string) =>
-value.toLowerCase().replace(/_/g, ' ').trim();
 
-const currentIndex = Math.max(
-0,
-stages.findIndex((stage) => normalize(stage) === normalize(current))
-);
 
 return (
 <main className="trackPage">
