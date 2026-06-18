@@ -139,3 +139,16 @@ background: linear-gradient(90deg, #4ade80, #22c55e);
 border-radius: 999px;
 transition: width 0.6s ease;
 }
+<div className="progressWrap">
+<div className="progressTop">
+<span>Transport Progress</span>
+<strong>{Math.round(((currentIndex + 1) / stages.length) * 100)}% complete</strong>
+</div>
+
+<div className="progressTrack">
+<div
+className="progressFill"
+style={{ width: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
+/>
+</div>
+</div>
