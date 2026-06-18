@@ -73,6 +73,14 @@ return () => clearInterval(timer);
 }, [ref]);
 
 const current = data?.current_step || data?.current_status || '';
+
+const normalize = (value: string) =>
+value.toLowerCase().replace(/[^a-z]/g, '').trim();
+
+const currentIndex = Math.max(
+0,
+stages.findIndex((stage) => normalize(stage) === normalize(current))
+);
 const normalize = (value: string) =>
 value.toLowerCase().replace(/_/g, ' ').trim();
 
