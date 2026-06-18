@@ -127,7 +127,19 @@ minute: '2-digit',
 </strong>
 </div>
 </div>
+<div className="progressWrap">
+<div className="progressTop">
+<span>Transport Progress</span>
+<strong>{Math.round(((currentIndex + 1) / stages.length) * 100)}% complete</strong>
+</div>
 
+<div className="progressTrack">
+<div
+className="progressFill"
+style={{ width: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
+/>
+</div>
+</div>
 <div className="timeline">
 {stages.map((stage, idx) => (
 <div
