@@ -163,20 +163,5 @@ transportinprogress: 80,
 arrivedatdestination: 90,
 completed: 100,
 };
-const normalize = (value: string) =>
-value.toLowerCase().replace(/[^a-z]/g, "").trim()
-const progressPercent =
-progressMap[normalize(current)] ?? 0;
-<div className="progressWrap">
-<div className="progressTop">
-<span>Transport Progress</span>
-<strong>{progressPercent}% complete</strong>
-</div>
 
-<div className="progressTrack">
-<div
-className="progressFill"
-style={{ width: `${progressPercent}%` }}
-/>
-</div>
 </div>
