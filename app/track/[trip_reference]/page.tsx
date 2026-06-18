@@ -73,7 +73,13 @@ return () => clearInterval(timer);
 }, [ref]);
 
 const current = data?.current_step || data?.current_status || '';
-const currentIndex = Math.max(0, stages.indexOf(current));
+const normalize = (value: string) =>
+value.toLowerCase().replace(/_/g, ' ').trim();
+
+const currentIndex = Math.max(
+0,
+stages.findIndex((stage) => normalize(stage) === normalize(current))
+);
 
 return (
 <main className="trackPage">
