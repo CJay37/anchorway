@@ -6,7 +6,10 @@ import Link from 'next/link';
 const LOCATION_URL =
 'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-driver-location';
 
-const SUPABASE_KEY = "sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3";
+const STATUS_URL =
+'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-transport-status';
+
+const SUPABASE_KEY = 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3';
 
 export default function DriverPage({
 params,
@@ -14,8 +17,8 @@ params,
 params: { trip_reference: string };
 }) {
 const tripReference =
-typeof window !== "undefined"
-? window.location.pathname.split("/").pop() || ""
+typeof window !== 'undefined'
+? window.location.pathname.split('/').pop() || ''
 : params.trip_reference;
 
 const [gpsStatus, setGpsStatus] = useState('GPS not started');
@@ -49,14 +52,11 @@ throw new Error(json.message || 'Location upload failed');
 setLastSent(new Date().toLocaleTimeString());
 }
 
-function startGPS() {
 async function updateStatus(status: string) {
-await fetch(
-"https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-transport-status",
-{
-method: "POST",
+await fetch(STATUS_URL, {
+method: 'POST',
 headers: {
-"Content-Type": "application/json",
+'Content-Type': 'application/json',
 apikey: SUPABASE_KEY,
 Authorization: `Bearer ${SUPABASE_KEY}`,
 },
@@ -66,11 +66,12 @@ current_status: status,
 current_step: status,
 visible_to_patient: true,
 }),
-}
-);
+});
 
 setGpsStatus(status);
 }
+
+function startGPS() {
 if (!navigator.geolocation) {
 setGpsStatus('GPS is not supported on this device');
 return;
@@ -129,6 +130,7 @@ AnchorWay
 <p><strong>Latitude:</strong> {latitude || 'Waiting...'}</p>
 <p><strong>Longitude:</strong> {longitude || 'Waiting...'}</p>
 <p><strong>Last Sent:</strong> {lastSent || 'Not sent yet'}</p>
+
 {latitude && longitude && (
 <iframe
 title="Driver Location Map"
@@ -140,18 +142,15 @@ allowFullScreen
 src={`https://www.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`}
 />
 )}
+
 <div className="statusGrid">
 <button onClick={startGPS}>▶ Start GPS</button>
 
-<button
-onClick={() => updateStatus("Patient Onboard")}
->
+<button onClick={() => updateStatus('Patient Onboard')}>
 👤 Patient Onboard
 </button>
 
-<button
-onClick={() => updateStatus("Trip Complete")}
->
+<button onClick={() => updateStatus('Trip Complete')}>
 🏁 Complete Trip
 </button>
 </div>
