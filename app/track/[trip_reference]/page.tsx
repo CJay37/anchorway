@@ -164,4 +164,4 @@ arrivedatdestination: 90,
 completed: 100,
 };
 
-</div>
+<div className="timeline">
