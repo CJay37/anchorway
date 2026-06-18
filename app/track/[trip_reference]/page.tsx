@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+const API_URL =
+'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-public-tracking';
+
+const SUPABASE_KEY = "sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3";
+
 const stages = [
 'Requested',
 'Confirmed',
@@ -14,12 +19,6 @@ const stages = [
 'Arrived at Destination',
 'Completed',
 ];
-
-const API_URL =
-process.env.NEXT_PUBLIC_TRACKING_API_URL ||
-'PASTE_SUPABASE_GET_PUBLIC_TRACKING_URL_HERE';
-
-const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 type Tracking = {
 trip_reference: string;
@@ -46,8 +45,8 @@ const res = await fetch(API_URL, {
 method: 'POST',
 headers: {
 'Content-Type': 'application/json',
-apikey: ANON_KEY,
-Authorization: `Bearer ${ANON_KEY}`,
+apikey: SUPABASE_KEY,
+Authorization: `Bearer ${SUPABASE_KEY}`,
 },
 body: JSON.stringify({ trip_reference: ref }),
 });
@@ -59,8 +58,8 @@ throw new Error(json.message || 'Tracking not found');
 }
 
 setData(json.tracking);
-} catch (e: any) {
-setError(e.message || 'Unable to load tracking');
+} catch (err: any) {
+setError(err.message || 'Unable to load tracking');
 } finally {
 setLoading(false);
 }
@@ -68,12 +67,12 @@ setLoading(false);
 
 if (ref) {
 load();
-const t = setInterval(load, 30000);
-return () => clearInterval(t);
+const timer = setInterval(load, 30000);
+return () => clearInterval(timer);
 }
 }, [ref]);
 
-const current = data?.current_status || '';
+const current = data?.current_step || data?.current_status || '';
 const currentIndex = Math.max(0, stages.indexOf(current));
 
 return (
@@ -89,7 +88,7 @@ Need Help?
 </Link>
 </div>
 
-<div className="statusBox">
+<section className="statusBox">
 <span className="statusPill">Live Transport Tracker</span>
 <p>Trip Reference</p>
 <h1>{ref}</h1>
@@ -140,7 +139,7 @@ idx < currentIndex
 </div>
 </>
 )}
-</div>
+</section>
 </div>
 </main>
 );
