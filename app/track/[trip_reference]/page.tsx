@@ -152,16 +152,3 @@ idx < currentIndex
 </main>
 );
 }
-const progressMap: Record<string, number> = {
-requested: 10,
-confirmed: 20,
-driverassigned: 35,
-driverenroute: 50,
-arrivedatpickup: 60,
-patientonboard: 70,
-transportinprogress: 80,
-arrivedatdestination: 90,
-completed: 100,
-};
-
-<div className="timeline">
