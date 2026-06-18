@@ -163,7 +163,8 @@ transportinprogress: 80,
 arrivedatdestination: 90,
 completed: 100,
 };
-
+const normalize = (value: string) =>
+value.toLowerCase().replace(/[^a-z]/g, "").trim()
 const progressPercent =
 progressMap[normalize(current)] ?? 0;
 <div className="progressWrap">
