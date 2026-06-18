@@ -152,3 +152,30 @@ idx < currentIndex
 </main>
 );
 }
+const progressMap: Record<string, number> = {
+requested: 10,
+confirmed: 20,
+driverassigned: 35,
+driverenroute: 50,
+arrivedatpickup: 60,
+patientonboard: 70,
+transportinprogress: 80,
+arrivedatdestination: 90,
+completed: 100,
+};
+
+const progressPercent =
+progressMap[normalize(current)] ?? 0;
+<div className="progressWrap">
+<div className="progressTop">
+<span>Transport Progress</span>
+<strong>{progressPercent}% complete</strong>
+</div>
+
+<div className="progressTrack">
+<div
+className="progressFill"
+style={{ width: `${progressPercent}%` }}
+/>
+</div>
+</div>
