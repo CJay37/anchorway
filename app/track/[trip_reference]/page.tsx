@@ -109,7 +109,7 @@ Need Help?
 <div className="bigStatus">🚑 {data.current_status}</div>
 <p className="lead">{data.current_step}</p>
 <div className="metricGrid"
-<div className="metricGrid">
+
 <div className="metric">
 <span>ETA</span>
 <strong>{data.eta || 'Updating'}</strong>
