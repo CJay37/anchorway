@@ -169,3 +169,43 @@ border-radius: 999px;
 background: linear-gradient(90deg, #60a5fa, #22c55e);
 transition: width 0.4s ease;
 }
+.trackingSearchPage {
+min-height: 80vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 40px 20px;
+}
+
+.trackingSearchCard {
+width: 100%;
+max-width: 560px;
+background: white;
+border: 1px solid #e5e7eb;
+border-radius: 26px;
+padding: 36px;
+box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+}
+
+.trackingSearchForm {
+display: grid;
+gap: 12px;
+margin-top: 24px;
+}
+
+.trackingSearchForm input {
+padding: 16px;
+border-radius: 14px;
+border: 1px solid #d1d5db;
+font-size: 18px;
+}
+
+.trackingSearchForm button {
+padding: 16px;
+border: none;
+border-radius: 14px;
+background: #142033;
+color: white;
+font-weight: 700;
+cursor: pointer;
+}
