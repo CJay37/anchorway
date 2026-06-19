@@ -62,14 +62,10 @@ console.log('Tracking response:', text);
 
 let json;
 try {
-json = JSON.parse(text);
-} catch {
-throw new Error('Tracking API did not return JSON');
-}
+const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 8000);
 
-if (!json.success) {
-throw new Error(json.message || 'Tracking not found');
-}
+const res = await fetch(API_URL, {
 method: 'POST',
 headers: {
 'Content-Type': 'application/json',
@@ -77,7 +73,10 @@ apikey: SUPABASE_KEY,
 Authorization: `Bearer ${SUPABASE_KEY}`,
 },
 body: JSON.stringify({ trip_reference: ref }),
+signal: controller.signal,
 });
+
+clearTimeout(timeout);
 
 const text = await res.text();
 console.log('Tracking response:', text);
