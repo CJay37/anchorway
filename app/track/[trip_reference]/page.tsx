@@ -51,7 +51,10 @@ Authorization: `Bearer ${SUPABASE_KEY}`,
 body: JSON.stringify({ trip_reference: ref }),
 });
 
-const json = await res.json();
+const text = await res.text();
+console.log('Tracking response:', text);
+
+const json = JSON.parse(text);
 
 if (!json.success) {
 throw new Error(json.message || 'Tracking not found');
@@ -62,6 +65,7 @@ setData(json.tracking);
 setError(err.message || 'Unable to load tracking');
 } finally {
 setLoading(false);
+}
 }
 }
 
