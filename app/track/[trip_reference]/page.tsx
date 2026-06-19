@@ -147,6 +147,12 @@ minute: '2-digit',
 className="progressFill"
 style={{ width: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
 />
+<div
+className="ambulanceMarker"
+style={{ left: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
+>
+🚑
+</div>
 </div>
 </div>
 <div className="timeline">
