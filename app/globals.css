@@ -235,7 +235,7 @@ position: relative;
 .ambulanceMarker {
 position: absolute;
 top: 18px;
-transform: translateX(-50%);
+animation: ambulanceBounce 1.4s ease-in-out infinite;
 font-size: 26px;
 transition: left 0.8s ease;
 animation: ambulanceFloat 1.8s ease-in-out infinite;
@@ -243,6 +243,14 @@ filter: drop-shadow(0 3px 5px rgba(0,0,0,0.18));
 }
 
 @keyframes ambulanceFloat {
+0%, 100% {
+transform: translateX(-50%) translateY(0);
+}
+50% {
+transform: translateX(-50%) translateY(-2px);
+}
+}
+@keyframes ambulanceBounce {
 0%, 100% {
 transform: translateX(-50%) translateY(0);
 }
