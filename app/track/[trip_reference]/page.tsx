@@ -67,7 +67,6 @@ setError(err.message || 'Unable to load tracking');
 setLoading(false);
 }
 }
-}
 
 if (ref) {
 load();
