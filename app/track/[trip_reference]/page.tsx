@@ -213,7 +213,7 @@ idx < currentIndex
 </div>
 ))}
 </div>
-</>
+
 )}
 </section>
 </div>
