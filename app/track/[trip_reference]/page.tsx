@@ -151,7 +151,30 @@ minute: '2-digit',
 ? "The patient has arrived at the destination facility."
 : "Transport completed successfully."}
 </p>
-</div> 
+</div>
+</div>
+</div>
+
+<div className="eventFeed">
+<h3>Live Updates</h3>
+
+<div className="eventItem active">
+<span>Now</span>
+<p>{data.current_step || data.current_status}</p>
+</div>
+
+<div className="eventItem">
+<span>ETA</span>
+<p>Estimated arrival: {data.eta || 'Updating'}</p>
+</div>
+
+<div className="eventItem">
+<span>Reference</span>
+<p>Trip {data.trip_reference} is being monitored by AnchorWay.</p>
+</div>
+</div>
+
+<div className="progressWrap">
 <div className="progressWrap">
 <div className="progressTop">
 <span>Transport Progress</span>
