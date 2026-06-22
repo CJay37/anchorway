@@ -48,7 +48,7 @@ method: 'POST',
 headers: {
 'Content-Type': 'application/json',
 apikey: SUPABASE_KEY,
-Authorization: `Bearer ${SUPABASE_KEY}`,
+Authorization: SUPABASE_KEY,
 },
 body: JSON.stringify({ trip_reference: ref }),
 });
