@@ -26,6 +26,10 @@ current_status: string;
 current_step: string;
 eta: string;
 last_updated: string;
+pickup_address?: string;
+destination_address?: string;
+mobility?: string;
+transport_level?: string;
 };
 
 export default function TrackPage() {
@@ -150,7 +154,31 @@ minute: '2-digit',
 <h3>What’s Happening Now</h3>
 <p>{explanation}</p>
 </div>
+<div className="detailsCard">
+<h3>Transport Details</h3>
 
+<div className="detailsGrid">
+<div>
+<span>Pickup</span>
+<strong>{data.pickup_address || 'Not listed'}</strong>
+</div>
+
+<div>
+<span>Destination</span>
+<strong>{data.destination_address || 'Not listed'}</strong>
+</div>
+
+<div>
+<span>Mobility</span>
+<strong>{data.mobility || 'Not listed'}</strong>
+</div>
+
+<div>
+<span>Transport Level</span>
+<strong>{data.transport_level || 'Not listed'}</strong>
+</div>
+</div>
+</div>
 <div className="progressWrap">
 <div className="progressTop">
 <span>Transport Progress</span>
