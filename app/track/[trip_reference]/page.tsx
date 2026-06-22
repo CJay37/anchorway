@@ -136,6 +136,22 @@ minute: '2-digit',
 </strong>
 </div>
 </div>
+<div className="statusExplanation">
+<h3>What's Happening Now</h3>
+<p>
+{data.current_status === "Driver En Route"
+? "Your transport team has been assigned and is currently traveling to the pickup location."
+: data.current_status === "Arrived at Pickup"
+? "The crew has arrived and is preparing for patient transfer."
+: data.current_status === "Patient Onboard"
+? "The patient has been safely loaded and transport is underway."
+: data.current_status === "Transport In Progress"
+? "The patient is currently being transported to the destination facility."
+: data.current_status === "Arrived at Destination"
+? "The patient has arrived at the destination facility."
+: "Transport completed successfully."}
+</p>
+</div> 
 <div className="progressWrap">
 <div className="progressTop">
 <span>Transport Progress</span>
