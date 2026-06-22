@@ -212,7 +212,7 @@ idx < currentIndex
 {stage}
 </div>
 ))}
-</div>
+
 
 </section>
 </div>
