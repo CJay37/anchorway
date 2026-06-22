@@ -30,6 +30,9 @@ pickup_address?: string;
 destination_address?: string;
 mobility?: string;
 transport_level?: string;
+driver_name?: string;
+driver_phone?: string;
+notes?: string;
 };
 
 export default function TrackPage() {
@@ -147,6 +150,10 @@ minute: '2-digit',
 })
 : 'Just now'}
 </strong>
+</div>
+<div className="metric">
+<span>Driver</span>
+<strong>{data.driver_name || 'Assigned Soon'}</strong>
 </div>
 </div>
 
