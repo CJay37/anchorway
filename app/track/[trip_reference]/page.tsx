@@ -195,26 +195,21 @@ style={{ left: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
 </div>
 </div>
 
-</div>
 <div className="timeline">
 {stages.map((stage, idx) => (
 <div
 key={stage}
 className={`step ${
-idx < currentIndex
-? 'done'
-: idx === currentIndex
-? 'active'
-: ''
+idx < currentIndex ? 'done' : idx === currentIndex ? 'active' : ''
 }`}
 >
-{idx < currentIndex ? '✓' : idx === currentIndex ? '●' : '○'}{' '}
-{stage}
+{idx < currentIndex ? '✓' : idx === currentIndex ? '•' : '○'} {stage}
 </div>
 ))}
+</div>
+
 </section>
 </div>
 </main>
 );
 }
-
