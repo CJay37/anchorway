@@ -214,7 +214,7 @@ idx < currentIndex
 ))}
 </div>
 
-)}
+}
 </section>
 </div>
 </main>
