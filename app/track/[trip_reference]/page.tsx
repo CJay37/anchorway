@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const API_URL =
-'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-public-tracking';
+'https://xjqxtgejkralrteximpy.supabase.co/functions/v1/get-public-tracking';
 
 const SUPABASE_KEY = 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3';
 
@@ -40,10 +40,9 @@ typeof window !== 'undefined'
 
 useEffect(() => {
 async function load() {
-try {
-const controller = new AbortController();
-const timeout = setTimeout(() => controller.abort(), 8000);
+if (!ref) return;
 
+try {
 const res = await fetch(API_URL, {
 method: 'POST',
 headers: {
@@ -52,14 +51,9 @@ apikey: SUPABASE_KEY,
 Authorization: `Bearer ${SUPABASE_KEY}`,
 },
 body: JSON.stringify({ trip_reference: ref }),
-signal: controller.signal,
 });
 
-clearTimeout(timeout);
-
 const text = await res.text();
-console.log('Tracking response:', text);
-
 const json = JSON.parse(text);
 
 if (!json.success) {
@@ -74,15 +68,13 @@ setLoading(false);
 }
 }
 
-if (ref) {
 load();
 const timer = setInterval(load, 30000);
+
 return () => clearInterval(timer);
-}
 }, [ref]);
 
 const current = data?.current_status || data?.current_step || '';
-
 const normalize = (value: string) =>
 value.toLowerCase().replace(/[^a-z]/g, '').trim();
 
@@ -91,6 +83,22 @@ const currentIndex = Math.max(
 stages.findIndex((stage) => normalize(stage) === normalize(current))
 );
 
+const percent = Math.round(((currentIndex + 1) / stages.length) * 100);
+
+const explanation =
+data?.current_status === 'Driver En Route'
+? 'Your transport team has been assigned and is currently traveling to the pickup location.'
+: data?.current_status === 'Arrived at Pickup'
+? 'The crew has arrived and is preparing for patient transfer.'
+: data?.current_status === 'Patient Onboard'
+? 'The patient has been safely loaded and transport is underway.'
+: data?.current_status === 'Transport In Progress'
+? 'The patient is currently being transported to the destination facility.'
+: data?.current_status === 'Arrived at Destination'
+? 'The patient has arrived at the destination facility.'
+: data?.current_status === 'Completed'
+? 'Transport completed successfully.'
+: 'The transport request is active and being updated.';
 
 return (
 <main className="trackPage">
@@ -100,6 +108,7 @@ return (
 <span className="logo">⚓</span>
 AnchorWay
 </Link>
+
 <Link href="/contact" className="btn secondary">
 Need Help?
 </Link>
@@ -117,8 +126,8 @@ Need Help?
 <>
 <div className="bigStatus">🚑 {data.current_status}</div>
 <p className="lead">{data.current_step}</p>
-<div className="metricGrid">
 
+<div className="metricGrid">
 <div className="metric">
 <span>ETA</span>
 <strong>{data.eta || 'Updating'}</strong>
@@ -136,62 +145,30 @@ minute: '2-digit',
 </strong>
 </div>
 </div>
+
 <div className="statusExplanation">
-<h3>What's Happening Now</h3>
-<p>
-{data.current_status === "Driver En Route"
-? "Your transport team has been assigned and is currently traveling to the pickup location."
-: data.current_status === "Arrived at Pickup"
-? "The crew has arrived and is preparing for patient transfer."
-: data.current_status === "Patient Onboard"
-? "The patient has been safely loaded and transport is underway."
-: data.current_status === "Transport In Progress"
-? "The patient is currently being transported to the destination facility."
-: data.current_status === "Arrived at Destination"
-? "The patient has arrived at the destination facility."
-: "Transport completed successfully."}
-</p>
+<h3>What’s Happening Now</h3>
+<p>{explanation}</p>
 </div>
 
-
-
-<div className="eventFeed">
-<h3>Live Updates</h3>
-
-<div className="eventItem active">
-<span>Now</span>
-<p>{data.current_step || data.current_status}</p>
-</div>
-
-<div className="eventItem">
-<span>ETA</span>
-<p>Estimated arrival: {data.eta || 'Updating'}</p>
-</div>
-
-<div className="eventItem">
-<span>Reference</span>
-<p>Trip {data.trip_reference} is being monitored by AnchorWay.</p>
-</div>
-</div>
-
-<div className="progressWrap">
 <div className="progressWrap">
 <div className="progressTop">
 <span>Transport Progress</span>
-<strong>{Math.round(((currentIndex + 1) / stages.length) * 100)}% complete</strong>
+<strong>{percent}% complete</strong>
 </div>
 
 <div className="progressTrack">
 <div
 className="progressFill"
-style={{ width: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
+style={{ width: `${percent}%` }}
 />
 
 <div
 className="ambulanceMarker"
-style={{ left: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
+style={{ left: `${percent}%` }}
 >
 🚑
+</div>
 </div>
 </div>
 
@@ -200,14 +177,24 @@ style={{ left: `${Math.round(((currentIndex + 1) / stages.length) * 100)}%` }}
 <div
 key={stage}
 className={`step ${
-idx < currentIndex ? 'done' : idx === currentIndex ? 'active' : ''
+idx < currentIndex
+? 'done'
+: idx === currentIndex
+? 'active'
+: ''
 }`}
 >
-{idx < currentIndex ? '✓' : idx === currentIndex ? '•' : '○'} {stage}
+{idx < currentIndex
+? '✓'
+: idx === currentIndex
+? '•'
+: '○'}{' '}
+{stage}
 </div>
 ))}
 </div>
-
+</>
+)}
 </section>
 </div>
 </main>
