@@ -152,8 +152,8 @@ minute: '2-digit',
 : "Transport completed successfully."}
 </p>
 </div>
-</div>
-</div>
+
+
 
 <div className="eventFeed">
 <h3>Live Updates</h3>
