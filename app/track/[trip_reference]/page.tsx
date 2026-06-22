@@ -212,8 +212,6 @@ idx < currentIndex
 {stage}
 </div>
 ))}
-
-
 </section>
 </div>
 </main>
