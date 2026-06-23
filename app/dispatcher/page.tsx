@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 
-const API_URL = 'https://xjqxtgejkralrteximpy.supabase.co/functions/v1/get-active-trips';
+const API_URL = 'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-active-trips';
 
 
 const SUPABASE_KEY = 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3';
