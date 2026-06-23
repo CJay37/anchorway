@@ -33,6 +33,8 @@ transport_level?: string;
 driver_name?: string;
 driver_phone?: string;
 notes?: string;
+transport_company?: string;
+vehicle_unit?: string;
 };
 
 export default function TrackPage() {
