@@ -1,21 +1,53 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const trips = [
-{
-ref: 'BW-5445',
-patient: 'Not listed',
-status: 'Requested',
-eta: 'Updating',
-},
-{
-ref: 'BW-3608',
-patient: 'Not listed',
-status: 'Requested',
-eta: 'Updating',
-},
-];
+const API_URL =
+'https://xjqxtgejkrarIteximpy.supabase.co/functions/v1/get-active-trips';
+
+const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY_HERE';
+
+type Trip = {
+trip_reference: string;
+current_transport_status?: string;
+pickup_address?: string;
+destination?: string;
+mobility?: string;
+transport_level?: string;
+estimated_pickup_eta?: string;
+};
 
 export default function DispatcherPage() {
+const [trips, setTrips] = useState<Trip[]>([]);
+const [loading, setLoading] = useState(true);
+
+async function loadTrips() {
+const res = await fetch(API_URL, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+apikey: SUPABASE_KEY,
+Authorization: `Bearer ${SUPABASE_KEY}`,
+},
+body: JSON.stringify({}),
+});
+
+const json = await res.json();
+
+if (json.success) {
+setTrips(json.trips || []);
+}
+
+setLoading(false);
+}
+
+useEffect(() => {
+loadTrips();
+const timer = setInterval(loadTrips, 30000);
+return () => clearInterval(timer);
+}, []);
+
 return (
 <main className="dashboardPage">
 <nav className="nav">
@@ -26,27 +58,31 @@ AnchorWay
 </nav>
 
 <section className="dashboardHero">
-<div>
 <span className="eyebrow">Live Dispatch Board</span>
 <h1>AnchorWay Dispatcher</h1>
-</div>
-<p>View active transports and open any trip tracking page.</p>
+<p>View active transports and open each tracking page.</p>
 </section>
+
+{loading && <p>Loading trips...</p>}
 
 <section className="cards">
 {trips.map((trip) => (
-<div className="card" key={trip.ref}>
-<h2>{trip.ref}</h2>
-<p><strong>Patient:</strong> {trip.patient}</p>
-<p><strong>Status:</strong> {trip.status}</p>
-<p><strong>ETA:</strong> {trip.eta}</p>
+<div className="card" key={trip.trip_reference}>
+<h2>{trip.trip_reference}</h2>
+
+<p><strong>Status:</strong> {trip.current_transport_status || 'Requested'}</p>
+<p><strong>Pickup:</strong> {trip.pickup_address || 'Not listed'}</p>
+<p><strong>Destination:</strong> {trip.destination || 'Not listed'}</p>
+<p><strong>Mobility:</strong> {trip.mobility || 'Not listed'}</p>
+<p><strong>Level:</strong> {trip.transport_level || 'Not listed'}</p>
+<p><strong>ETA:</strong> {trip.estimated_pickup_eta || 'Updating'}</p>
 
 <div style={{ display: 'flex', gap: '10px', marginTop: '14px', flexWrap: 'wrap' }}>
-<Link className="btn" href={`/track/${trip.ref}`}>
+<Link className="btn" href={`/track/${trip.trip_reference}`}>
 Patient View
 </Link>
 
-<Link className="btn secondary" href={`/driver/${trip.ref}`}>
+<Link className="btn secondary" href={`/driver/${trip.trip_reference}`}>
 Driver GPS
 </Link>
 </div>
