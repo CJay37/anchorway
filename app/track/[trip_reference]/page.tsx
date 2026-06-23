@@ -157,6 +157,15 @@ minute: '2-digit',
 <span>Driver</span>
 <strong>{data.driver_name || 'Assigned Soon'}</strong>
 </div>
+<div className="metric">
+<span>Company</span>
+<strong>{data.transport_company || 'Not listed yet'}</strong>
+</div>
+
+<div className="metric">
+<span>Vehicle</span>
+<strong>{data.vehicle_unit || 'Not listed yet'}</strong>
+</div>
 </div>
 
 <div className="statusExplanation">
