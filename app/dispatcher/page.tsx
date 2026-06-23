@@ -6,7 +6,7 @@ import Link from 'next/link';
 const API_URL =
 'https://xjqxtgejkrarIteximpy.supabase.co/functions/v1/get-active-trips';
 
-const SUPABASE_KEY = 'YOUR_PUBLISHABLE_KEY_HERE';
+const SUPABASE_KEY = '';
 
 type Trip = {
 trip_reference: string;
