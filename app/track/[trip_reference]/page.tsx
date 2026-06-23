@@ -161,29 +161,7 @@ minute: '2-digit',
 <h3>What’s Happening Now</h3>
 <p>{explanation}</p>
 </div>
-<div className="statusExplanation">
-<h3>Transport Details</h3>
 
-<p>
-<strong>Pickup:</strong><br />
-{data?.pickup_address || 'Not available'}
-</p>
-
-<p>
-<strong>Destination:</strong><br />
-{data?.destination_address || 'Not available'}
-</p>
-
-<p>
-<strong>Mobility:</strong><br />
-{data?.mobility || 'Not available'}
-</p>
-
-<p>
-<strong>Transport Level:</strong><br />
-{data?.transport_level || 'Not available'}
-</p>
-</div>
 <div className="detailsCard">
 <h3>Transport Details</h3>
 
