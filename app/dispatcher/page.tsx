@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const API_URL =
+
 const API_URL = 'https://xjqxtgejkralrteximpy.supabase.co/functions/v1/get-active-trips';
 
 
