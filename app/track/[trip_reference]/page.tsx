@@ -14,7 +14,7 @@ const stages = [
 'Driver Assigned',
 'Driver En Route',
 'Arrived at Pickup',
-'Patient Onboard',
+'Patient Loaded',
 'Transport In Progress',
 'Arrived at Destination',
 'Completed',
@@ -68,7 +68,7 @@ const json = JSON.parse(text);
 if (!json.success) {
 throw new Error(json.message || 'Tracking not found');
 }
-
+setError('');
 setData(json.tracking);
 } catch (err: any) {
 setError(err.message || 'Unable to load tracking');
