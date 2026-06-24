@@ -42,7 +42,32 @@ setTrips(json.trips || []);
 
 setLoading(false);
 }
+async function updateStatus(
+tripReference: string,
+newStatus: string
+) {
+try {
+await fetch(
+"https://xjqxtgejkralrteximpy.supabase.co/functions/v1/update-transport-status",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+apikey: SUPABASE_KEY,
+Authorization: `Bearer ${SUPABASE_KEY}`,
+},
+body: JSON.stringify({
+trip_reference: tripReference,
+current_status: newStatus,
+}),
+}
+);
 
+loadTrips();
+} catch (error) {
+console.error(error);
+}
+}
 useEffect(() => {
 loadTrips();
 const timer = setInterval(loadTrips, 30000);
@@ -86,6 +111,32 @@ Patient View
 <Link className="btn secondary" href={`/driver/${trip.trip_reference}`}>
 Driver GPS
 </Link>
+<select
+onChange={(e) =>
+updateStatus(
+trip.trip_reference,
+e.target.value
+)
+}
+style={{
+padding: "8px",
+borderRadius: "8px",
+border: "1px solid #ccc",
+minWidth: "180px",
+}}
+>
+<option value="">Update Status</option>
+<option value="Requested">Requested</option>
+<option value="Confirmed">Confirmed</option>
+<option value="Driver Assigned">Driver Assigned</option>
+<option value="Driver En Route">Driver En Route</option>
+<option value="Arrived at Pickup">Arrived at Pickup</option>
+<option value="Patient Loaded">Patient Loaded</option>
+<option value="Transport In Progress">Transport In Progress</option>
+<option value="Arrived at Destination">Arrived at Destination</option>
+<option value="Completed">Completed</option>
+</select>
+
 </div>
 </div>
 ))}
