@@ -83,7 +83,7 @@ const timer = setInterval(load, 30000);
 return () => clearInterval(timer);
 }, [ref]);
 
-const current = data?.current_status || data?.current_step || '';
+const current = data?.current_status || '';
 const normalize = (value: string) =>
 value.toLowerCase().replace(/[^a-z]/g, '').trim();
 
@@ -134,7 +134,7 @@ Need Help?
 {data && (
 <>
 <div className="bigStatus">🚑 {data.current_status}</div>
-<p className="lead">{data.current_step}</p>
+<p className="lead">{explanation}</p>
 
 <div className="metricGrid">
 <div className="metric">
