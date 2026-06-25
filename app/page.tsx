@@ -43,7 +43,7 @@ export default function Home(){
             <div className="step done">✓ Driver Assigned</div>
             <div className="step active">🟢 Driver En Route</div>
             <div className="step">○ Arrived at Pickup</div>
-            <div className="step">○ Patient Onboard</div>
+            <div className="step">○ Patient Loaded</div>
             <div className="step">○ Completed</div>
           </div>
         </div>
