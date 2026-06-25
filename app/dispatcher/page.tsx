@@ -93,8 +93,12 @@ AnchorWay
 </section>
 
 {loading && <p>Loading trips...</p>}
-setMessage(`${tripReference} updated to ${newStatus}`);
-setTimeout(() => setMessage(''), 3000);
+{message && (
+<p style={{ color: "green", fontWeight: "bold" }}>
+{message}
+</p>
+)}
+
 
 <section className="cards">
 {trips.map((trip) => (
