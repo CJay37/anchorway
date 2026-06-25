@@ -121,7 +121,7 @@ Patient View
 Driver GPS
 </Link>
 <select
-value=""
+defaultValue=""
 onChange={(e) =>
 updateStatus(
 trip.trip_reference,
