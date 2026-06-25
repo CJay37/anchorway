@@ -42,10 +42,8 @@ const [data, setData] = useState<Tracking | null>(null);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState('');
 
-const ref =
-typeof window !== 'undefined'
-? decodeURIComponent(window.location.pathname.split('/').pop() || '')
-: '';
+const params = useParams();
+const ref = decodeURIComponent(String(params.trip_reference || ''));
 
 useEffect(() => {
 async function load() {
