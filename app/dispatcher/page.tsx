@@ -22,6 +22,7 @@ estimated_pickup_eta?: string;
 export default function DispatcherPage() {
 const [trips, setTrips] = useState<Trip[]>([]);
 const [loading, setLoading] = useState(true);
+const [message, setMessage] = useState('');
 
 async function loadTrips() {
 const res = await fetch(API_URL, {
@@ -64,6 +65,8 @@ current_status: newStatus,
 );
 
 loadTrips();
+setMessage(`${tripReference} updated to ${newStatus}`);
+setTimeout(() => setMessage(''), 3000);
 } catch (error) {
 console.error(error);
 }
@@ -90,6 +93,8 @@ AnchorWay
 </section>
 
 {loading && <p>Loading trips...</p>}
+setMessage(`${tripReference} updated to ${newStatus}`);
+setTimeout(() => setMessage(''), 3000);
 
 <section className="cards">
 {trips.map((trip) => (
@@ -112,6 +117,7 @@ Patient View
 Driver GPS
 </Link>
 <select
+value=""
 onChange={(e) =>
 updateStatus(
 trip.trip_reference,
