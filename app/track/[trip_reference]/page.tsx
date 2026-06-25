@@ -99,7 +99,7 @@ data?.current_status === 'Driver En Route'
 ? 'Your transport team has been assigned and is currently traveling to the pickup location.'
 : data?.current_status === 'Arrived at Pickup'
 ? 'The crew has arrived and is preparing for patient transfer.'
-data?.current_status === 'Patient Loaded'
+: data?.current_status === 'Patient Loaded'
 ? 'The patient has been safely loaded and transport is underway.'
 : data?.current_status === 'Transport In Progress'
 ? 'The patient is currently being transported to the destination facility.'
@@ -108,6 +108,7 @@ data?.current_status === 'Patient Loaded'
 : data?.current_status === 'Completed'
 ? 'Transport completed successfully.'
 : 'The transport request is active and being updated.';
+
 
 return (
 <main className="trackPage">
