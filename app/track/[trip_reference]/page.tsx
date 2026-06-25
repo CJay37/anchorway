@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+
 
 const API_URL =
 'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-public-tracking';
