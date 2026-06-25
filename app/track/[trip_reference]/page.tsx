@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 
 const API_URL =
@@ -49,7 +49,7 @@ const ref = decodeURIComponent(String(params.trip_reference || ''));
 
 useEffect(() => {
 async function load() {
-if (!ref) return;
+
 
 try {
 const res = await fetch(API_URL, {
