@@ -63,7 +63,7 @@ current_status: newStatus,
 }),
 }
 );
-
+await new Promise(resolve => setTimeout(resolve, 300));
 loadTrips();
 setMessage(`${tripReference} updated to ${newStatus}`);
 setTimeout(() => setMessage(''), 3000);
@@ -73,7 +73,7 @@ console.error(error);
 }
 useEffect(() => {
 loadTrips();
-const timer = setInterval(loadTrips, 30000);
+const timer = setInterval(loadTrips, 5000);
 return () => clearInterval(timer);
 }, []);
 
