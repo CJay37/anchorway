@@ -297,3 +297,36 @@ color: #334155;
 font-weight: 700;
 color: #2563eb;
 }
+.progressFill {
+transition: width 0.8s ease;
+}
+
+.ambulanceMarker {
+transition: left 0.8s ease;
+transform: translateX(-50%);
+animation: ambulanceBounce 1.5s ease-in-out infinite;
+}
+
+.step.active {
+font-weight: 800;
+color: #2563eb;
+animation: activePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ambulanceBounce {
+0%, 100% {
+transform: translateX(-50%) translateY(0);
+}
+50% {
+transform: translateX(-50%) translateY(-4px);
+}
+}
+
+@keyframes activePulse {
+0%, 100% {
+opacity: 1;
+}
+50% {
+opacity: 0.65;
+}
+}
