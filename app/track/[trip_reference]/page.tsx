@@ -78,7 +78,7 @@ setLoading(false);
 }
 
 load();
-const timer = setInterval(load, 30000);
+const timer = setInterval(load, 5000);
 
 return () => clearInterval(timer);
 }, [ref]);
