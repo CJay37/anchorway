@@ -48,8 +48,8 @@ tripReference: string,
 newStatus: string
 ) {
 try {
-await fetch(
-"https://xjqxtgejkralrteximpy.supabase.co/functions/v1/update-transport-status",
+const res = await fetch(
+"https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-transport-status",
 {
 method: "POST",
 headers: {
@@ -63,6 +63,14 @@ current_status: newStatus,
 }),
 }
 );
+
+const json = await res.json();
+
+if (!json.success) {
+setMessage(`Update failed: ${json.message || json.error || "Unknown error"}`);
+return;
+}
+
 await new Promise(resolve => setTimeout(resolve, 300));
 loadTrips();
 setMessage(`${tripReference} updated to ${newStatus}`);
