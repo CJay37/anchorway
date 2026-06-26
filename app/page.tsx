@@ -14,7 +14,7 @@ export default function Home(){
   return <main>
     <nav className="nav">
       <Link href="/" className="brand"><span className="logo">⚓</span>AnchorWay</Link>
-      <div className="navlinks"><Link href="/track/BW-3608">Tracking</Link><Link href="/facility-dashboard">Facilities</Link><Link href="/dispatcher-dashboard">Dispatch</Link><Link href="/contact">Contact</Link></div>
+      <Link className="btn" href="/tracking">Track a Transport</Link>
       <Link href="/contact" className="btn secondary">Request Demo</Link>
     </nav>
     <section className="hero">
@@ -24,7 +24,9 @@ export default function Home(){
           <h1>Medical transportation coordination made clear, simple, and connected.</h1>
           <p className="lead">AnchorWay helps hospitals, healthcare facilities, transport providers, patients, and families stay aligned from intake to arrival.</p>
           <div className="actions">
-            <Link className="btn" href="/track/BW-3608">Track a Transport</Link>
+            <Link className="btn" href="/tracking">
+Track a Transport
+</Link>
             <Link className="btn secondary" href="/facility-dashboard">Provider Login</Link>
             <Link className="btn secondary" href="/dispatcher-dashboard">Dispatcher Login</Link>
           </div>
