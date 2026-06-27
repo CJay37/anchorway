@@ -71,7 +71,13 @@ setMessage(`Update failed: ${json.message || json.error || "Unknown error"}`);
 return;
 }
 
-await new Promise(resolve => setTimeout(resolve, 300));
+await new Promise(resolve => setTimeout(resolve, 300));setTrips((currentTrips) =>
+currentTrips.map((trip) =>
+trip.trip_reference === tripReference
+? { ...trip, current_transport_status: newStatus }
+: trip
+)
+);
 loadTrips();
 setMessage(`${tripReference} updated to ${newStatus}`);
 setTimeout(() => setMessage(''), 3000);
