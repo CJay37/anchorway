@@ -59,7 +59,7 @@ Authorization: `Bearer ${SUPABASE_KEY}`,
 },
 body: JSON.stringify({
 trip_reference: tripReference,
-current_transport_status: newStatus,
+current_status: newStatus,
 }),
 }
 );
