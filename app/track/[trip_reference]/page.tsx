@@ -8,7 +8,7 @@ const API_URL =
 'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-public-tracking';
 
 const SUPABASE_KEY =
-'sb_publishable_z01MvX-5uBHRFwWs_KonpA_eMXueki3';
+'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3';
 
 const stages = [
 'Requested',
