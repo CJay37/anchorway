@@ -198,6 +198,30 @@ trip.current_transport_status === "Transport In Progress"
 <p><strong>Mobility:</strong> {trip.mobility || 'Not listed'}</p>
 <p><strong>Level:</strong> {trip.transport_level || 'Not listed'}</p>
 <p><strong>ETA:</strong> {trip.estimated_pickup_eta || 'Updating'}</p>
+<div style={{ marginTop: "12px" }}>
+<strong>Patient Readiness:</strong>{" "}
+{trip.readiness_score ?? 0}% - {trip.readiness_label || "Not Started"}
+
+<div style={{
+marginTop: "6px",
+height: "10px",
+background: "#e5e7eb",
+borderRadius: "999px",
+overflow: "hidden"
+}}>
+<div style={{
+width: `${trip.readiness_score ?? 0}%`,
+height: "100%",
+background: (trip.readiness_score ?? 0) >= 80 ? "#22c55e" : (trip.readiness_score ?? 0) >= 50 ? "#f59e0b" : "#ef4444"
+}} />
+</div>
+
+{trip.readiness_issues && trip.readiness_issues.length > 0 && (
+<p style={{ fontSize: "13px", color: "#64748b", marginTop: "6px" }}>
+Needs: {trip.readiness_issues.join(", ")}
+</p>
+)}
+</div>
 
 <div style={{ display: 'flex', gap: '10px', marginTop: '14px', flexWrap: 'wrap' }}>
 <Link className="btn" href={`/track/${trip.trip_reference}`}>
