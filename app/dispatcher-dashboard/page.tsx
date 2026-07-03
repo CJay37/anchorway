@@ -3,12 +3,18 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+const TRACKING_REF = 'BW-3608';
+
 const LOCATION_URL =
-'https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-driver-location?trip_reference=BW-3608';
+`https://xjqxtgejkralrteximpy.supabase.co/functions/v1/get-driver-location?trip_reference=${TRACKING_REF}`;
+
+const READINESS_URL =
+'https://xjqxtgejkralrteximpy.supabase.co/functions/v1/update-readiness-score';
 
 export default function DispatcherDashboard() {
 const [location, setLocation] = useState<any>(null);
 const [status, setStatus] = useState('Loading live GPS...');
+const [readiness, setReadiness] = useState<any>(null);
 
 async function loadLocation() {
 try {
@@ -27,11 +33,39 @@ setStatus('Could not load live GPS');
 }
 }
 
+async function loadReadiness() {
+try {
+const res = await fetch(READINESS_URL, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ trip_reference: TRACKING_REF }),
+});
+
+const json = await res.json();
+
+if (json.success) {
+setReadiness(json);
+}
+} catch {
+console.log('Could not load readiness score');
+}
+}
+
 useEffect(() => {
 loadLocation();
-const timer = setInterval(loadLocation, 2000);
+loadReadiness();
+
+const timer = setInterval(() => {
+loadLocation();
+loadReadiness();
+}, 2000);
+
 return () => clearInterval(timer);
 }, []);
+
+const readinessScore = readiness?.readiness_score ?? 0;
+const readinessLabel = readiness?.readiness_label ?? 'Not Started';
+const readinessIssues = readiness?.readiness_issues ?? [];
 
 return (
 <main className="dashboardPage">
@@ -41,7 +75,7 @@ return (
 AnchorWay
 </Link>
 
-<Link href="/track/BW-3608" className="navLink">
+<Link href={`/track/${TRACKING_REF}`} className="navLink">
 View Public Tracker
 </Link>
 </nav>
@@ -50,7 +84,7 @@ View Public Tracker
 <div>
 <span className="eyebrow">Live Dispatcher Map</span>
 <h1>Dispatcher live transport view</h1>
-<p>Monitor active transport location in real time.</p>
+<p>Monitor active transport location, readiness, and delays in real time.</p>
 </div>
 
 <div className="summaryCard">
@@ -60,7 +94,8 @@ View Public Tracker
 </section>
 
 <section className="detailPanel">
-<h2>🚑 BW-3608</h2>
+<h2>🚑 {TRACKING_REF}</h2>
+
 <p><strong>Driver:</strong> {location?.driver_name || 'Waiting...'}</p>
 <p><strong>Latitude:</strong> {location?.latitude || 'Waiting...'}</p>
 <p><strong>Longitude:</strong> {location?.longitude || 'Waiting...'}</p>
@@ -76,6 +111,54 @@ loading="lazy"
 src={`https://maps.google.com/maps?q=${location.latitude},${location.longitude}&z=15&output=embed`}
 />
 )}
+</section>
+
+<section className="detailPanel">
+<h2>Patient Readiness</h2>
+
+<div style={{ fontSize: '42px', fontWeight: 'bold' }}>
+{readinessScore}%
+</div>
+
+<p>
+<strong>Status:</strong> {readinessLabel}
+</p>
+
+<div
+style={{
+height: '12px',
+background: '#e5e7eb',
+borderRadius: '999px',
+overflow: 'hidden',
+marginTop: '12px',
+}}
+>
+<div
+style={{
+width: `${readinessScore}%`,
+height: '100%',
+background:
+readinessScore >= 80
+? '#22c55e'
+: readinessScore >= 50
+? '#f59e0b'
+: '#ef4444',
+}}
+/>
+</div>
+
+<div style={{ marginTop: '18px' }}>
+<strong>Remaining blockers:</strong>
+{readinessIssues.length === 0 ? (
+<p>✅ No readiness blockers. Patient is ready.</p>
+) : (
+<ul>
+{readinessIssues.map((issue: string) => (
+<li key={issue}>{issue}</li>
+))}
+</ul>
+)}
+</div>
 </section>
 </main>
 );
