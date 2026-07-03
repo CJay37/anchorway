@@ -17,6 +17,9 @@ destination?: string;
 mobility?: string;
 transport_level?: string;
 estimated_pickup_eta?: string;
+readiness_score?: number;
+readiness_label?: string;
+readiness_issues?: string[];
 };
 
 export default function DispatcherPage() {
