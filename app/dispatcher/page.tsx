@@ -105,7 +105,77 @@ AnchorWay
 <h1>AnchorWay Dispatcher</h1>
 <p>View active transports and open each tracking page.</p>
 </section>
+<section
+style={{
+display: "grid",
+gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+gap: "14px",
+margin: "20px 0 24px",
+}}
+>
+<div
+style={{
+padding: "18px",
+borderRadius: "14px",
+border: "1px solid #e5e7eb",
+background: "white",
+}}
+>
+<span style={{ fontSize: "13px", color: "#64748b" }}>
+Active Transports
+</span>
+<div style={{ fontSize: "30px", fontWeight: "bold", marginTop: "6px" }}>
+{trips.length}
+</div>
+</div>
 
+<div
+style={{
+padding: "18px",
+borderRadius: "14px",
+border: "1px solid #e5e7eb",
+background: "white",
+}}
+>
+<span style={{ fontSize: "13px", color: "#64748b" }}>
+Need Assignment
+</span>
+<div style={{ fontSize: "30px", fontWeight: "bold", marginTop: "6px" }}>
+{
+trips.filter(
+(trip) =>
+!trip.current_transport_status ||
+trip.current_transport_status === "Requested" ||
+trip.current_transport_status === "Confirmed"
+).length
+}
+</div>
+</div>
+
+<div
+style={{
+padding: "18px",
+borderRadius: "14px",
+border: "1px solid #e5e7eb",
+background: "white",
+}}
+>
+<span style={{ fontSize: "13px", color: "#64748b" }}>
+In Progress
+</span>
+<div style={{ fontSize: "30px", fontWeight: "bold", marginTop: "6px" }}>
+{
+trips.filter(
+(trip) =>
+trip.current_transport_status === "Driver En Route" ||
+trip.current_transport_status === "Arrived at Pickup" ||
+trip.current_transport_status === "Patient Loaded" ||
+trip.current_transport_status === "Transport In Progress"
+).length
+}
+</div>
+</div>
+</section>
 {loading && <p>Loading trips...</p>}
 {message && (
 <p style={{ color: "green", fontWeight: "bold" }}>
