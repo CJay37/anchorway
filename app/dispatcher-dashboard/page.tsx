@@ -13,8 +13,9 @@ const READINESS_URL =
 
 export default function DispatcherDashboard() {
 const [location, setLocation] = useState<any>(null);
-const [status, setStatus] = useState('Loading live GPS...');
+const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
 const [readiness, setReadiness] = useState<any>(null);
+const [readinessStatus, setReadinessStatus] = useState('Loading readiness...');
 
 async function loadLocation() {
 try {
@@ -22,14 +23,14 @@ const res = await fetch(LOCATION_URL);
 const json = await res.json();
 
 if (!json.success || !json.location) {
-setStatus('No live driver location found yet');
+setGpsStatus('No live driver location found yet');
 return;
 }
 
 setLocation(json.location);
-setStatus('Live GPS connected');
+setGpsStatus('Live GPS connected');
 } catch {
-setStatus('Could not load live GPS');
+setGpsStatus('Could not load live GPS');
 }
 }
 
@@ -37,17 +38,25 @@ async function loadReadiness() {
 try {
 const res = await fetch(READINESS_URL, {
 method: 'POST',
-headers: { 'Content-Type': 'application/json' },
+headers: {
+'Content-Type': 'application/json',
+apikey: 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
+Authorization: 'Bearer sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
+},
 body: JSON.stringify({ trip_reference: TRACKING_REF }),
 });
 
 const json = await res.json();
 
-if (json.success) {
-setReadiness(json);
+if (!json.success) {
+setReadinessStatus(json.message || json.error || 'Could not load readiness');
+return;
 }
+
+setReadiness(json);
+setReadinessStatus('Readiness connected');
 } catch {
-console.log('Could not load readiness score');
+setReadinessStatus('Could not load readiness');
 }
 }
 
@@ -63,9 +72,9 @@ loadReadiness();
 return () => clearInterval(timer);
 }, []);
 
-const readinessScore = readiness?.readiness_score ?? 0;
-const readinessLabel = readiness?.readiness_label ?? 'Not Started';
-const readinessIssues = readiness?.readiness_issues ?? [];
+const readinessScore = readiness?.readiness_score;
+const readinessLabel = readiness?.readiness_label;
+const readinessIssues = readiness?.readiness_issues || [];
 
 return (
 <main className="dashboardPage">
@@ -88,8 +97,8 @@ View Public Tracker
 </div>
 
 <div className="summaryCard">
-<span>Status</span>
-<strong>{status}</strong>
+<span>GPS Status</span>
+<strong>{gpsStatus}</strong>
 </div>
 </section>
 
@@ -116,6 +125,10 @@ src={`https://maps.google.com/maps?q=${location.latitude},${location.longitude}&
 <section className="detailPanel">
 <h2>Patient Readiness</h2>
 
+<p><strong>Connection:</strong> {readinessStatus}</p>
+
+{readiness ? (
+<>
 <div style={{ fontSize: '42px', fontWeight: 'bold' }}>
 {readinessScore}%
 </div>
@@ -159,6 +172,10 @@ readinessScore >= 80
 </ul>
 )}
 </div>
+</>
+) : (
+<p>Waiting for readiness data...</p>
+)}
 </section>
 </main>
 );
