@@ -40,16 +40,24 @@ const res = await fetch(READINESS_URL, {
 method: 'POST',
 headers: {
 'Content-Type': 'application/json',
-apikey: 'sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
-Authorization: 'Bearer sb_publishable_zO1MvX-5uBHRFwWs_KonpA_eMXueki3',
 },
-body: JSON.stringify({ trip_reference: TRACKING_REF }),
+body: JSON.stringify({
+trip_reference: TRACKING_REF,
+}),
 });
 
-const json = await res.json();
+const text = await res.text();
+
+let json;
+try {
+json = JSON.parse(text);
+} catch {
+setReadinessStatus('Bad response from readiness function');
+return;
+}
 
 if (!json.success) {
-setReadinessStatus(json.message || json.error || 'Could not load readiness');
+setReadinessStatus(json.error || json.message || 'Could not load readiness');
 return;
 }
 
