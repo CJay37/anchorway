@@ -9,7 +9,7 @@ const LOCATION_URL =
 `https://xjqxtgejkralrteximpy.supabase.co/functions/v1/get-driver-location?trip_reference=${TRACKING_REF}`;
 
 const READINESS_URL =
-'https://xjqxtgejkralrteximpy.supabase.co/functions/v1/update-readiness-score';
+`https://xjqxtgejkralrteximpy.supabase.co/functions/v1/update-readiness-score?trip_reference=${TRACKING_REF}`;
 
 export default function DispatcherDashboard() {
 const [location, setLocation] = useState<any>(null);
@@ -36,28 +36,11 @@ setGpsStatus('Could not load live GPS');
 
 async function loadReadiness() {
 try {
-const res = await fetch(READINESS_URL, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-},
-body: JSON.stringify({
-trip_reference: TRACKING_REF,
-}),
-});
-
-const text = await res.text();
-
-let json;
-try {
-json = JSON.parse(text);
-} catch {
-setReadinessStatus('Bad response from readiness function');
-return;
-}
+const res = await fetch(READINESS_URL);
+const json = await res.json();
 
 if (!json.success) {
-setReadinessStatus(json.error || json.message || 'Could not load readiness');
+setReadinessStatus(json.error || 'Could not load readiness');
 return;
 }
 
@@ -141,9 +124,7 @@ src={`https://maps.google.com/maps?q=${location.latitude},${location.longitude}&
 {readinessScore}%
 </div>
 
-<p>
-<strong>Status:</strong> {readinessLabel}
-</p>
+<p><strong>Status:</strong> {readinessLabel}</p>
 
 <div
 style={{
