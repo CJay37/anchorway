@@ -6,10 +6,10 @@ import Link from 'next/link';
 const TRACKING_REF = 'BW-3608';
 
 const LOCATION_URL =
-`https://xjqxtgejkrarlexamsy.supabase.co/functions/v1/get-driver-location?trip_reference=${TRACKING_REF}`;
+`https://xjqxtgejkrarlteximpy.supabase.co/rest/v1/get-driver-location?trip_reference=${TRACKING_REF}`;
 
 const READINESS_URL =
-`https://xjqxtgejkrarlexamsy.supabase.co/functions/v1/update-readiness-score?trip_reference=${TRACKING_REF}`;
+`https://xjqxtgejkrarlteximpy.supabase.co/rest/v1/update-readiness-score?trip_reference=${TRACKING_REF}`;
 
 
 
