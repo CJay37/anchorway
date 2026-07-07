@@ -11,6 +11,7 @@ const LOCATION_URL =
 const READINESS_URL =
 `https://xjqxtgejkralrteximpy.supabase.co/functions/v1/update-readiness-score?trip_reference=${TRACKING_REF}`;
 
+
 export default function DispatcherDashboard() {
 const [location, setLocation] = useState<any>(null);
 const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
