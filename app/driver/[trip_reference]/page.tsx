@@ -105,7 +105,9 @@ timeout: 10000,
 }
 );
 }
-
+useEffect(() => {
+startGPS();
+}, []);
 return (
 <main className="dashboardPage">
 <nav className="nav">
