@@ -32,7 +32,22 @@ return;
 }
 
 setLocation(json.location);
-setMapLocation((current: any) => current ?? json.location);
+setMapLocation((current: any) => {
+if (!current) return json.location;
+
+const latDifference = Math.abs(
+Number(json.location.latitude) - Number(current.latitude)
+);
+
+const lngDifference = Math.abs(
+Number(json.location.longitude) - Number(current.longitude)
+);
+
+const hasMovedEnough =
+latDifference > 0.00015 || lngDifference > 0.00015;
+
+return hasMovedEnough ? json.location : current;
+});
 setGpsStatus('Live GPS connected');
 } catch {
 setGpsStatus('Could not load live GPS');
