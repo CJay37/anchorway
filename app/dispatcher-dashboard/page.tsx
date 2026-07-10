@@ -15,6 +15,7 @@ const READINESS_URL =
 
 export default function DispatcherDashboard() {
 const [location, setLocation] = useState<any>(null);
+const [mapLocation, setMapLocation] = useState<any>(null);
 const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
 const [readiness, setReadiness] = useState<any>(null);
 const [readinessStatus, setReadinessStatus] =
@@ -31,6 +32,7 @@ return;
 }
 
 setLocation(json.location);
+setMapLocation((current: any) => current ?? json.location);
 setGpsStatus('Live GPS connected');
 } catch {
 setGpsStatus('Could not load live GPS');
@@ -60,12 +62,32 @@ useEffect(() => {
 loadLocation();
 loadReadiness();
 
-const timer = setInterval(() => {
+const locationTimer = setInterval(() => {
 loadLocation();
+}, 5000);
+
+const readinessTimer = setInterval(() => {
 loadReadiness();
 }, 20000);
 
-return () => clearInterval(timer);
+const mapTimer = setInterval(async () => {
+try {
+const res = await fetch(LOCATION_URL);
+const json = await res.json();
+
+if (json.success && json.location) {
+setMapLocation(json.location);
+}
+} catch {
+console.error('Could not refresh map location');
+}
+}, 20000);
+
+return () => {
+clearInterval(locationTimer);
+clearInterval(readinessTimer);
+clearInterval(mapTimer);
+};
 }, []);
 
 const readinessScore = readiness?.readiness_score;
@@ -133,10 +155,12 @@ and delays in real time.
 
 <p>
 <strong>Last Updated:</strong>{' '}
-{location?.updated_at || 'Waiting...'}
+{location?.updated_at
+? new Date(location.updated_at).toLocaleString()
+: 'Waiting...'}
 </p>
 
-{location?.latitude && location?.longitude && (
+{mapLocation?.latitude && mapLocation?.longitude && (
 <iframe
 width="100%"
 height="360"
@@ -146,7 +170,7 @@ borderRadius: '24px',
 marginTop: '20px',
 }}
 loading="lazy"
-src={`https://maps.google.com/maps?q=${location.latitude},${location.longitude}&z=15&output=embed`}
+src={`https://maps.google.com/maps?q=${mapLocation.latitude},${mapLocation.longitude}&z=15&output=embed`}
 />
 )}
 </section>
