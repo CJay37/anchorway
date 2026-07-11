@@ -57,7 +57,41 @@ message: 'Driver device disconnected'
 
 const connectionHealth =
 getConnectionHealth(location?.updated_at);
-
+const connectionTheme =
+connectionHealth.label.includes('Live')
+? {
+background: '#ecfdf3',
+border: '#22c55e',
+color: '#166534',
+icon: '●',
+}
+: connectionHealth.label.includes('Weak')
+? {
+background: '#fffbeb',
+border: '#f59e0b',
+color: '#92400e',
+icon: '●',
+}
+: connectionHealth.label.includes('Paused')
+? {
+background: '#fff7ed',
+border: '#f97316',
+color: '#9a3412',
+icon: '●',
+}
+: connectionHealth.label.includes('Offline')
+? {
+background: '#fef2f2',
+border: '#ef4444',
+color: '#991b1b',
+icon: '●',
+}
+: {
+background: '#f8fafc',
+border: '#94a3b8',
+color: '#475569',
+icon: '●',
+};
 async function loadLocation() {
 try {
 const res = await fetch(LOCATION_URL);
@@ -176,20 +210,81 @@ and delays in real time.
 </p>
 </div>
 
-<div className="summaryCard">
-<span>GPS Connection</span>
+<div
+className="summaryCard"
+style={{
+background: connectionTheme.background,
+border: `1px solid ${connectionTheme.border}`,
+borderLeft: `6px solid ${connectionTheme.border}`,
+color: connectionTheme.color,
+padding: '22px',
+borderRadius: '18px',
+minHeight: '150px',
+}}
+>
+<span
+style={{
+display: 'block',
+fontSize: '13px',
+fontWeight: 700,
+letterSpacing: '0.08em',
+textTransform: 'uppercase',
+opacity: 0.75,
+marginBottom: '12px',
+}}
+>
+Driver GPS Connection
+</span>
 
-<strong>{connectionHealth.label}</strong>
+<div
+style={{
+display: 'flex',
+alignItems: 'center',
+gap: '10px',
+marginBottom: '10px',
+}}
+>
+<span
+style={{
+color: connectionTheme.border,
+fontSize: '24px',
+lineHeight: 1,
+}}
+>
+{connectionTheme.icon}
+</span>
+
+<strong
+style={{
+fontSize: '22px',
+lineHeight: 1.2,
+}}
+>
+{connectionHealth.label.replace(/^[^A-Za-z]+/, '')}
+</strong>
+</div>
 
 <small
 style={{
 display: 'block',
-marginTop: '8px',
-lineHeight: '1.4',
+fontSize: '15px',
+lineHeight: '1.45',
+marginBottom: '12px',
 }}
 >
 {connectionHealth.message}
 </small>
+
+<div
+style={{
+paddingTop: '12px',
+borderTop: `1px solid ${connectionTheme.border}40`,
+fontSize: '13px',
+fontWeight: 600,
+}}
+>
+Trip {TRACKING_REF}
+</div>
 </div>
 </section>
 
