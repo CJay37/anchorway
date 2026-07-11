@@ -180,7 +180,12 @@ const readinessScore = readiness?.readiness_score;
 const readinessLabel = readiness?.readiness_label;
 const readinessIssues = readiness?.readiness_issues || [];
 const currentTransportStep = 'driver_en_route';
-
+const currentTripStatus = 'Driver en route to pickup';
+const displayedEta = location?.eta || 'Updating';
+const displayedReadiness =
+typeof readinessScore === 'number'
+? `${readinessScore}%`
+: 'Checking';
 const transportSteps = [
 {
 id: 'request_received',
