@@ -20,6 +20,43 @@ const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
 const [readiness, setReadiness] = useState<any>(null);
 const [readinessStatus, setReadinessStatus] =
 useState('Loading readiness...');
+function getConnectionHealth(updatedAt?: string) {
+if (!updatedAt) {
+return {
+label: 'Waiting',
+message: 'Waiting for first GPS update'
+};
+}
+
+const seconds =
+(Date.now() - new Date(updatedAt).getTime()) / 1000;
+
+if (seconds < 45)
+return {
+label: '🟢 Live',
+message: `Updated ${Math.floor(seconds)} sec ago`
+};
+
+if (seconds < 90)
+return {
+label: '🟡 Weak Signal',
+message: `Last update ${Math.floor(seconds)} sec ago`
+};
+
+if (seconds < 180)
+return {
+label: '🟠 Paused',
+message: 'GPS temporarily stopped'
+};
+
+return {
+label: '🔴 Offline',
+message: 'Driver device disconnected'
+};
+}
+
+const connectionHealth =
+getConnectionHealth(location?.updated_at);
 
 async function loadLocation() {
 try {
@@ -140,8 +177,19 @@ and delays in real time.
 </div>
 
 <div className="summaryCard">
-<span>GPS Status</span>
-<strong>{gpsStatus}</strong>
+<span>GPS Connection</span>
+
+<strong>{connectionHealth.label}</strong>
+
+<small
+style={{
+display: 'block',
+marginTop: '8px',
+lineHeight: '1.4',
+}}
+>
+{connectionHealth.message}
+</small>
 </div>
 </section>
 
