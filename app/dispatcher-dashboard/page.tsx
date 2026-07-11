@@ -401,15 +401,47 @@ flexWrap: 'wrap',
 }}
 >
 <div>
-<span className="eyebrow">Live Trip Progress</span>
+<div
+style={{
+display: 'flex',
+gap: '12px',
+flexWrap: 'wrap',
+marginTop: '18px',
+}}
+>
+<div
+style={{
+padding: '10px 14px',
+borderRadius: '12px',
+background: '#f0fdf4',
+border: '1px solid #bbf7d0',
+}}
+>
+<strong>Current:</strong> {currentTripStatus}
+</div>
 
-<h2 style={{ marginTop: '10px', marginBottom: '8px' }}>
-Transport Timeline
-</h2>
+<div
+style={{
+padding: '10px 14px',
+borderRadius: '12px',
+background: '#eff6ff',
+border: '1px solid #bfdbfe',
+}}
+>
+<strong>ETA:</strong> {displayedEta}
+</div>
 
-<p style={{ margin: 0, opacity: 0.75 }}>
-See what has happened, what is happening now, and what comes next.
-</p>
+<div
+style={{
+padding: '10px 14px',
+borderRadius: '12px',
+background: '#f8fafc',
+border: '1px solid #e2e8f0',
+}}
+>
+<strong>Readiness:</strong> {displayedReadiness}
+</div>
+</div>
 </div>
 
 <div
