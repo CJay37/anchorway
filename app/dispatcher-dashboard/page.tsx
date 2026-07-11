@@ -179,7 +179,54 @@ clearInterval(mapTimer);
 const readinessScore = readiness?.readiness_score;
 const readinessLabel = readiness?.readiness_label;
 const readinessIssues = readiness?.readiness_issues || [];
+const currentTransportStep = 'driver_en_route';
 
+const transportSteps = [
+{
+id: 'request_received',
+label: 'Request received',
+description: 'The transport request was successfully created.',
+},
+{
+id: 'driver_assigned',
+label: 'Driver assigned',
+description: 'A driver has been assigned to this trip.',
+},
+{
+id: 'driver_en_route',
+label: 'Driver en route to pickup',
+description: 'The driver is traveling to the pickup location.',
+},
+{
+id: 'arrived_pickup',
+label: 'Arrived at pickup',
+description: 'The driver has reached the pickup location.',
+},
+{
+id: 'patient_onboard',
+label: 'Patient onboard',
+description: 'The patient is safely inside the vehicle.',
+},
+{
+id: 'en_route_destination',
+label: 'En route to destination',
+description: 'The transport is traveling to the destination.',
+},
+{
+id: 'arrived_destination',
+label: 'Arrived at destination',
+description: 'The vehicle has reached the destination.',
+},
+{
+id: 'trip_complete',
+label: 'Transport complete',
+description: 'The patient transfer has been completed.',
+},
+];
+
+const currentTransportIndex = transportSteps.findIndex(
+(step) => step.id === currentTransportStep
+);
 return (
 <main className="dashboardPage">
 <nav className="nav">
@@ -337,7 +384,171 @@ src={`https://maps.google.com/maps?q=${mapLocation.latitude},${mapLocation.longi
 />
 )}
 </section>
+<section className="detailPanel">
+<div
+style={{
+display: 'flex',
+justifyContent: 'space-between',
+alignItems: 'flex-start',
+gap: '20px',
+marginBottom: '28px',
+flexWrap: 'wrap',
+}}
+>
+<div>
+<span className="eyebrow">Live Trip Progress</span>
 
+<h2 style={{ marginTop: '10px', marginBottom: '8px' }}>
+Transport Timeline
+</h2>
+
+<p style={{ margin: 0, opacity: 0.75 }}>
+See what has happened, what is happening now, and what comes next.
+</p>
+</div>
+
+<div
+style={{
+padding: '10px 14px',
+borderRadius: '999px',
+background: '#ecfdf3',
+border: '1px solid #22c55e',
+color: '#166534',
+fontWeight: 700,
+whiteSpace: 'nowrap',
+}}
+>
+Live trip
+</div>
+</div>
+
+<div style={{ display: 'grid', gap: '0' }}>
+{transportSteps.map((step, index) => {
+const isComplete = index < currentTransportIndex;
+const isCurrent = index === currentTransportIndex;
+const isUpcoming = index > currentTransportIndex;
+
+return (
+<div
+key={step.id}
+style={{
+display: 'grid',
+gridTemplateColumns: '42px 1fr',
+gap: '14px',
+minHeight: '92px',
+}}
+>
+<div
+style={{
+display: 'flex',
+flexDirection: 'column',
+alignItems: 'center',
+}}
+>
+<div
+style={{
+width: '34px',
+height: '34px',
+borderRadius: '50%',
+display: 'grid',
+placeItems: 'center',
+flexShrink: 0,
+fontWeight: 800,
+background: isComplete
+? '#22c55e'
+: isCurrent
+? '#dcfce7'
+: '#f3f4f6',
+border: isCurrent
+? '3px solid #22c55e'
+: isUpcoming
+? '1px solid #d1d5db'
+: 'none',
+color: isComplete
+? '#ffffff'
+: isCurrent
+? '#166534'
+: '#6b7280',
+}}
+>
+{isComplete ? '✓' : isCurrent ? '●' : index + 1}
+</div>
+
+{index < transportSteps.length - 1 && (
+<div
+style={{
+width: '3px',
+flex: 1,
+minHeight: '46px',
+background:
+index < currentTransportIndex
+? '#22c55e'
+: '#e5e7eb',
+}}
+/>
+)}
+</div>
+
+<div
+style={{
+paddingBottom: '24px',
+opacity: isUpcoming ? 0.55 : 1,
+}}
+>
+<div
+style={{
+display: 'flex',
+justifyContent: 'space-between',
+alignItems: 'center',
+gap: '12px',
+flexWrap: 'wrap',
+}}
+>
+<strong style={{ fontSize: '18px' }}>{step.label}</strong>
+
+{isCurrent && (
+<span
+style={{
+padding: '5px 10px',
+borderRadius: '999px',
+background: '#dcfce7',
+color: '#166534',
+fontSize: '12px',
+fontWeight: 800,
+}}
+>
+CURRENT
+</span>
+)}
+
+{isComplete && (
+<span
+style={{
+color: '#15803d',
+fontSize: '13px',
+fontWeight: 700,
+}}
+>
+Complete
+</span>
+)}
+</div>
+
+<p
+style={{
+marginTop: '7px',
+marginBottom: 0,
+lineHeight: 1.5,
+}}
+>
+{step.description}
+</p>
+</div>
+</div>
+);
+})}
+</div>
+</section>
 <section className="detailPanel">
 <h2>Patient Readiness</h2>
 
