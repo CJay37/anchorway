@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 const LOCATION_URL =
@@ -25,7 +25,10 @@ const [gpsStatus, setGpsStatus] = useState('GPS not started');
 const [latitude, setLatitude] = useState('');
 const [longitude, setLongitude] = useState('');
 const [lastSent, setLastSent] = useState('');
-
+const latestCoordinates = useRef<{
+latitude: number;
+longitude: number;
+} | null>(null);
 async function sendLocation(lat: number, lng: number) {
 const res = await fetch(LOCATION_URL, {
 method: 'POST',
@@ -83,7 +86,10 @@ navigator.geolocation.watchPosition(
 async (position) => {
 const lat = position.coords.latitude;
 const lng = position.coords.longitude;
-
+latestCoordinates.current = {
+latitude: lat,
+longitude: lng,
+};
 setLatitude(String(lat));
 setLongitude(String(lng));
 setGpsStatus('GPS connected - uploading location');
@@ -107,6 +113,24 @@ timeout: 10000,
 }
 useEffect(() => {
 startGPS();
+}, []);
+useEffect(() => {
+const heartbeatTimer = window.setInterval(() => {
+const coordinates = latestCoordinates.current;
+
+if (!coordinates) return;
+
+sendLocation(
+coordinates.latitude,
+coordinates.longitude
+).catch((error) => {
+console.error('GPS heartbeat failed:', error);
+});
+}, 30000);
+
+return () => {
+window.clearInterval(heartbeatTimer);
+};
 }, []);
 return (
 <main className="dashboardPage">
