@@ -264,16 +264,21 @@ lineHeight: 1.2,
 </strong>
 </div>
 
-<small
+<div
 style={{
-display: 'block',
-fontSize: '15px',
-lineHeight: '1.45',
-marginBottom: '12px',
+marginTop: '12px',
+fontSize: '13px',
+lineHeight: '1.5',
 }}
 >
-{connectionHealth.message}
-</small>
+<strong>Last Update</strong>
+
+<div>
+{location?.updated_at
+? new Date(location.updated_at).toLocaleTimeString()
+: 'Waiting...'}
+</div>
+</div>
 
 <div
 style={{
