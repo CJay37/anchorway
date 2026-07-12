@@ -410,36 +410,147 @@ marginTop: '18px',
 }}
 >
 <div
+<div
 style={{
-padding: '10px 14px',
-borderRadius: '12px',
-background: '#f0fdf4',
-border: '1px solid #bbf7d0',
+display: 'grid',
+gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+gap: '14px',
+marginBottom: '28px',
 }}
 >
-<strong>Current:</strong> {currentTripStatus}
-</div>
+{/* Current transport status */}
+<div
+style={{
+padding: '18px',
+borderRadius: '18px',
+border: '1px solid #dbe7e2',
+background: '#ffffff',
+boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
+}}
+>
+<span
+style={{
+display: 'block',
+fontSize: '12px',
+fontWeight: 700,
+letterSpacing: '0.08em',
+textTransform: 'uppercase',
+color: '#64748b',
+marginBottom: '10px',
+}}
+>
+Current Status
+</span>
 
 <div
 style={{
-padding: '10px 14px',
-borderRadius: '12px',
-background: '#eff6ff',
-border: '1px solid #bfdbfe',
+display: 'flex',
+alignItems: 'center',
+gap: '10px',
 }}
 >
-<strong>ETA:</strong> {displayedEta}
+<span style={{ fontSize: '22px' }}>🚑</span>
+
+<strong
+style={{
+fontSize: '18px',
+lineHeight: 1.3,
+color: '#163f38',
+}}
+>
+{currentTripStatus}
+</strong>
 </div>
+</div>
+
+{/* Estimated arrival */}
+<div
+style={{
+padding: '18px',
+borderRadius: '18px',
+border: '1px solid #dbe7e2',
+background: '#ffffff',
+boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
+}}
+>
+<span
+style={{
+display: 'block',
+fontSize: '12px',
+fontWeight: 700,
+letterSpacing: '0.08em',
+textTransform: 'uppercase',
+color: '#64748b',
+marginBottom: '10px',
+}}
+>
+Estimated Arrival
+</span>
 
 <div
 style={{
-padding: '10px 14px',
-borderRadius: '12px',
-background: '#f8fafc',
-border: '1px solid #e2e8f0',
+display: 'flex',
+alignItems: 'center',
+gap: '10px',
 }}
 >
-<strong>Readiness:</strong> {displayedReadiness}
+<span style={{ fontSize: '22px' }}>⏱️</span>
+
+<strong
+style={{
+fontSize: '18px',
+lineHeight: 1.3,
+color: '#163f38',
+}}
+>
+{displayedEta}
+</strong>
+</div>
+</div>
+
+{/* Patient readiness */}
+<div
+style={{
+padding: '18px',
+borderRadius: '18px',
+border: '1px solid #dbe7e2',
+background: '#ffffff',
+boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
+}}
+>
+<span
+style={{
+display: 'block',
+fontSize: '12px',
+fontWeight: 700,
+letterSpacing: '0.08em',
+textTransform: 'uppercase',
+color: '#64748b',
+marginBottom: '10px',
+}}
+>
+Patient Readiness
+</span>
+
+<div
+style={{
+display: 'flex',
+alignItems: 'center',
+gap: '10px',
+}}
+>
+<span style={{ fontSize: '22px' }}>✅</span>
+
+<strong
+style={{
+fontSize: '18px',
+lineHeight: 1.3,
+color: '#163f38',
+}}
+>
+{displayedReadiness}
+</strong>
+</div>
 </div>
 </div>
 </div>
