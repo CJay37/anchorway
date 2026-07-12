@@ -818,7 +818,6 @@ lineHeight: 1.5,
 </div>
 </div>
 </section>
-
 <section className="detailPanel">
 <h2>Patient Readiness</h2>
 
