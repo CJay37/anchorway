@@ -354,16 +354,6 @@ Trip {TRACKING_REF}
 </p>
 
 <p>
-<strong>Latitude:</strong>{' '}
-{location?.latitude || 'Waiting...'}
-</p>
-
-<p>
-<strong>Longitude:</strong>{' '}
-{location?.longitude || 'Waiting...'}
-</p>
-
-<p>
 <strong>ETA:</strong>{' '}
 {location?.eta || 'Updating'}
 </p>
