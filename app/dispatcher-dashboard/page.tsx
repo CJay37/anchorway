@@ -408,156 +408,286 @@ gap: '14px',
 marginBottom: '28px',
 }}
 >
-{/* Current transport status */}
-<div
+<section
 style={{
-padding: '18px',
-borderRadius: '18px',
-border: '1px solid #dbe7e2',
 background: '#ffffff',
-boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
+border: '1px solid #e5e7eb',
+borderRadius: '24px',
+padding: '28px',
+boxShadow: '0 18px 50px rgba(15, 23, 42, 0.08)',
+marginBottom: '28px',
 }}
 >
-<span
-style={{
-display: 'block',
-fontSize: '12px',
-fontWeight: 700,
-letterSpacing: '0.08em',
-textTransform: 'uppercase',
-color: '#64748b',
-marginBottom: '10px',
-}}
->
-Current Status
-</span>
-
 <div
 style={{
 display: 'flex',
-alignItems: 'center',
-gap: '10px',
+justifyContent: 'space-between',
+alignItems: 'flex-start',
+gap: '20px',
+flexWrap: 'wrap',
+marginBottom: '24px',
 }}
 >
-<span style={{ fontSize: '22px' }}>🚑</span>
-
-<strong
-style={{
-fontSize: '18px',
-lineHeight: 1.3,
-color: '#163f38',
-}}
->
-{currentTripStatus}
-</strong>
-</div>
-</div>
-
-{/* Estimated arrival */}
-<div
-style={{
-padding: '18px',
-borderRadius: '18px',
-border: '1px solid #dbe7e2',
-background: '#ffffff',
-boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
-}}
->
+<div>
 <span
 style={{
-display: 'block',
+display: 'inline-block',
 fontSize: '12px',
-fontWeight: 700,
+fontWeight: 800,
 letterSpacing: '0.08em',
 textTransform: 'uppercase',
-color: '#64748b',
-marginBottom: '10px',
+color: '#166534',
+background: '#ecfdf3',
+border: '1px solid #bbf7d0',
+borderRadius: '999px',
+padding: '7px 11px',
+marginBottom: '12px',
+}}
+>
+Live Trip Intelligence
+</span>
+
+<h2
+style={{
+margin: 0,
+fontSize: '30px',
+lineHeight: 1.15,
+color: '#111827',
+}}
+>
+Driver en route to pickup
+</h2>
+
+<p
+style={{
+margin: '10px 0 0',
+color: '#6b7280',
+fontSize: '15px',
+}}
+>
+Trip {TRACKING_REF}
+</p>
+</div>
+
+<div
+style={{
+background: '#f0fdf4',
+border: '1px solid #bbf7d0',
+borderRadius: '18px',
+padding: '16px 18px',
+minWidth: '180px',
+}}
+>
+<div
+style={{
+fontSize: '12px',
+fontWeight: 800,
+letterSpacing: '0.08em',
+textTransform: 'uppercase',
+color: '#166534',
 }}
 >
 Estimated Arrival
-</span>
+</div>
 
 <div
 style={{
-display: 'flex',
-alignItems: 'center',
-gap: '10px',
-}}
->
-<span style={{ fontSize: '22px' }}>⏱️</span>
-
-<strong
-style={{
-fontSize: '18px',
-lineHeight: 1.3,
-color: '#163f38',
+marginTop: '7px',
+fontSize: '24px',
+fontWeight: 800,
+color: '#14532d',
 }}
 >
 {displayedEta}
-</strong>
+</div>
 </div>
 </div>
 
-{/* Patient readiness */}
 <div
 style={{
-padding: '18px',
-borderRadius: '18px',
-border: '1px solid #dbe7e2',
-background: '#ffffff',
-boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
+display: 'grid',
+gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+gap: '14px',
+marginBottom: '22px',
 }}
 >
-<span
+<div
 style={{
-display: 'block',
-fontSize: '12px',
-fontWeight: 700,
-letterSpacing: '0.08em',
-textTransform: 'uppercase',
-color: '#64748b',
-marginBottom: '10px',
+background: '#f8fafc',
+border: '1px solid #e2e8f0',
+borderRadius: '18px',
+padding: '18px',
 }}
 >
-Patient Readiness
-</span>
+<div
+style={{
+fontSize: '12px',
+fontWeight: 800,
+color: '#64748b',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+}}
+>
+Current Situation
+</div>
 
+<div
+style={{
+marginTop: '9px',
+fontSize: '17px',
+fontWeight: 750,
+color: '#0f172a',
+}}
+>
+Driver is traveling to the pickup location.
+</div>
+</div>
+
+<div
+style={{
+background: '#fff7ed',
+border: '1px solid #fed7aa',
+borderRadius: '18px',
+padding: '18px',
+}}
+>
+<div
+style={{
+fontSize: '12px',
+fontWeight: 800,
+color: '#9a3412',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+}}
+>
+Waiting On
+</div>
+
+<div
+style={{
+marginTop: '9px',
+fontSize: '17px',
+fontWeight: 750,
+color: '#7c2d12',
+}}
+>
+Sending hospital
+</div>
+</div>
+
+<div
+style={{
+background: '#eff6ff',
+border: '1px solid #bfdbfe',
+borderRadius: '18px',
+padding: '18px',
+}}
+>
+<div
+style={{
+fontSize: '12px',
+fontWeight: 800,
+color: '#1d4ed8',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+}}
+>
+Action Needed
+</div>
+
+<div
+style={{
+marginTop: '9px',
+fontSize: '17px',
+fontWeight: 750,
+color: '#1e3a8a',
+}}
+>
+Complete discharge paperwork
+</div>
+</div>
+</div>
+
+<div
+style={{
+background: '#f8fafc',
+border: '1px solid #e2e8f0',
+borderRadius: '18px',
+padding: '18px',
+}}
+>
 <div
 style={{
 display: 'flex',
+justifyContent: 'space-between',
+gap: '16px',
 alignItems: 'center',
-gap: '10px',
+flexWrap: 'wrap',
+marginBottom: '12px',
 }}
 >
-<span style={{ fontSize: '22px' }}>✅</span>
-
-<strong
+<div>
+<div
 style={{
-fontSize: '18px',
-lineHeight: 1.3,
-color: '#163f38',
+fontSize: '12px',
+fontWeight: 800,
+color: '#64748b',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
 }}
 >
-{displayedReadiness}
-</strong>
+Transport Readiness
 </div>
-</div>
+
+<div
+style={{
+marginTop: '5px',
+fontSize: '14px',
+color: '#64748b',
+}}
+>
+One clear view of what is complete and what still needs attention.
 </div>
 </div>
 
 <div
 style={{
-padding: '10px 14px',
-borderRadius: '999px',
-background: '#ecfdf3',
-border: '1px solid #22c55e',
+fontSize: '24px',
+fontWeight: 850,
 color: '#166534',
-fontWeight: 700,
-whiteSpace: 'nowrap',
 }}
 >
-Live trip
+{displayedReadiness}
 </div>
+</div>
+
+<div
+style={{
+height: '12px',
+background: '#e5e7eb',
+borderRadius: '999px',
+overflow: 'hidden',
+}}
+>
+<div
+style={{
+width:
+typeof readinessScore === 'number'
+? `${readinessScore}%`
+: '0%',
+height: '100%',
+background:
+typeof readinessScore === 'number' && readinessScore >= 80
+? '#22c55e'
+: typeof readinessScore === 'number' && readinessScore >= 50
+? '#f59e0b'
+: '#ef4444',
+transition: 'width 300ms ease',
+}}
+/>
+</div>
+</div>
+</section>
 </div>
 
 <div style={{ display: 'grid', gap: '0' }}>
