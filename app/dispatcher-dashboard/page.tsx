@@ -818,6 +818,7 @@ lineHeight: 1.5,
 </div>
 </div>
 </div>
+</div>
 </section>
 
 <section className="detailPanel">
