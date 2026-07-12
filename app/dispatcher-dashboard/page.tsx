@@ -817,6 +817,7 @@ lineHeight: 1.5,
 })}
 </div>
 </div>
+</div>
 </section>
 
 <section className="detailPanel">
@@ -872,7 +873,7 @@ readinessScore >= 80
 {readinessIssues.length === 0 ? (
 <p>
 ✅ No readiness blockers. Patient is ready.
-</p>
+</p> 
 ) : (
 <ul>
 {readinessIssues.map((issue: string) => (
