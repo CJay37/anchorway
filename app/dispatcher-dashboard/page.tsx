@@ -18,6 +18,9 @@ const [location, setLocation] = useState<any>(null);
 const [mapLocation, setMapLocation] = useState<any>(null);
 const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
 const [readiness, setReadiness] = useState<any>(null);
+const [expandedStepId, setExpandedStepId] = useState<string | null>(
+'driver_en_route'
+);
 const [readinessStatus, setReadinessStatus] =
 useState('Loading readiness...');
 function getConnectionHealth(updatedAt?: string) {
@@ -232,6 +235,91 @@ description: 'The patient transfer has been completed.',
 const currentTransportIndex = transportSteps.findIndex(
 (step) => step.id === currentTransportStep
 );
+const transportStepDetails: Record<
+string,
+{
+time: string;
+situation: string;
+waitingOn: string;
+actionNeeded: string;
+delayReason: string;
+updatedBy: string;
+}
+> = {
+request_received: {
+time: '2:00 PM',
+situation: 'The transport request was entered into AnchorWay.',
+waitingOn: 'Transport company acceptance',
+actionNeeded: 'Review the request and assign the proper unit.',
+delayReason: 'No delay reported',
+updatedBy: 'Sending facility',
+},
+
+driver_assigned: {
+time: '2:12 PM',
+situation: 'A transport crew has been assigned.',
+waitingOn: 'Driver departure confirmation',
+actionNeeded: 'Confirm the crew has the necessary transport information.',
+delayReason: 'No delay reported',
+updatedBy: 'Transport dispatcher',
+},
+
+driver_en_route: {
+time: location?.updated_at
+? new Date(location.updated_at).toLocaleTimeString()
+: 'Updating',
+situation: 'The driver is traveling to the pickup location.',
+waitingOn: 'Sending hospital',
+actionNeeded: 'Complete discharge paperwork before the crew arrives.',
+delayReason: 'No active transportation delay reported',
+updatedBy: location?.driver_name || 'Driver GPS',
+},
+
+arrived_pickup: {
+time: 'Not reached',
+situation: 'The crew will confirm when it reaches the pickup location.',
+waitingOn: 'Crew arrival',
+actionNeeded: 'Prepare the patient, belongings, paperwork, and medications.',
+delayReason: 'Not yet available',
+updatedBy: 'Transport crew',
+},
+
+patient_onboard: {
+time: 'Not reached',
+situation: 'The crew will confirm when the patient is safely onboard.',
+waitingOn: 'Patient loading',
+actionNeeded: 'Confirm the destination is prepared to receive the patient.',
+delayReason: 'Not yet available',
+updatedBy: 'Transport crew',
+},
+
+en_route_destination: {
+time: 'Not reached',
+situation: 'The crew will travel to the receiving destination.',
+waitingOn: 'Destination arrival',
+actionNeeded: 'Keep the receiving party informed of the updated ETA.',
+delayReason: 'Not yet available',
+updatedBy: 'Transport crew',
+},
+
+arrived_destination: {
+time: 'Not reached',
+situation: 'The crew will confirm arrival at the destination.',
+waitingOn: 'Patient handoff',
+actionNeeded: 'Receiving staff or caregiver must be available.',
+delayReason: 'Not yet available',
+updatedBy: 'Receiving party',
+},
+
+trip_complete: {
+time: 'Not reached',
+situation: 'The transport will close after the patient handoff is completed.',
+waitingOn: 'Final transfer confirmation',
+actionNeeded: 'Record the outcome and any delays.',
+delayReason: 'Not yet available',
+updatedBy: 'Transport crew',
+},
+};
 return (
 <main className="dashboardPage">
 <nav className="nav">
@@ -695,17 +783,30 @@ transition: 'width 300ms ease',
 const isComplete = index < currentTransportIndex;
 const isCurrent = index === currentTransportIndex;
 const isUpcoming = index > currentTransportIndex;
+const isExpanded = expandedStepId === step.id;
+const stepDetails = transportStepDetails[step.id];
 
 return (
 <div
 key={step.id}
+onClick={() =>
+setExpandedStepId((current) =>
+current === step.id ? null : step.id
+)
+}
 style={{
 display: 'grid',
 gridTemplateColumns: '42px 1fr',
 gap: '14px',
 minHeight: '92px',
+cursor: 'pointer',
+borderRadius: '16px',
+padding: '8px',
+transition: 'background 180ms ease',
+background: isExpanded ? '#f8fafc' : 'transparent',
 }}
 >
+
 <div
 style={{
 display: 'flex',
@@ -772,7 +873,26 @@ gap: '12px',
 flexWrap: 'wrap',
 }}
 >
+<div
+style={{
+display: 'flex',
+alignItems: 'center',
+gap: '10px',
+}}
+>
 <strong style={{ fontSize: '18px' }}>{step.label}</strong>
+
+<span
+style={{
+fontSize: '14px',
+color: '#64748b',
+transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+transition: 'transform 180ms ease',
+}}
+>
+▼
+</span>
+</div>
 
 {isCurrent && (
 <span
@@ -811,6 +931,57 @@ lineHeight: 1.5,
 >
 {step.description}
 </p>
+{isExpanded && stepDetails && (
+<div
+onClick={(event) => event.stopPropagation()}
+style={{
+marginTop: '16px',
+padding: '18px',
+borderRadius: '16px',
+background: '#ffffff',
+border: '1px solid #e2e8f0',
+boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
+}}
+>
+<div
+style={{
+display: 'grid',
+gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+gap: '14px',
+}}
+>
+<TimelineDetail
+label="Last update"
+value={stepDetails.time}
+/>
+
+<TimelineDetail
+label="Current situation"
+value={stepDetails.situation}
+/>
+
+<TimelineDetail
+label="Waiting on"
+value={stepDetails.waitingOn}
+/>
+
+<TimelineDetail
+label="Action needed"
+value={stepDetails.actionNeeded}
+/>
+
+<TimelineDetail
+label="Delay status"
+value={stepDetails.delayReason}
+/>
+
+<TimelineDetail
+label="Updated by"
+value={stepDetails.updatedBy}
+/>
+</div>
+</div>
+)}
 </div>
 </div>
 );
@@ -889,5 +1060,47 @@ readinessScore >= 80
 )}
 </section>
 </main>
+);
+}
+function TimelineDetail({
+label,
+value,
+}: {
+label: string;
+value: string;
+}) {
+return (
+<div
+style={{
+padding: '14px',
+borderRadius: '14px',
+background: '#f8fafc',
+border: '1px solid #e2e8f0',
+}}
+>
+<div
+style={{
+marginBottom: '6px',
+fontSize: '11px',
+fontWeight: 800,
+letterSpacing: '0.07em',
+textTransform: 'uppercase',
+color: '#64748b',
+}}
+>
+{label}
+</div>
+
+<div
+style={{
+fontSize: '14px',
+lineHeight: 1.5,
+fontWeight: 650,
+color: '#1e293b',
+}}
+>
+{value}
+</div>
+</div>
 );
 }
