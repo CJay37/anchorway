@@ -11,6 +11,8 @@ const LOCATION_URL =
 const READINESS_URL =
 `https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-readiness-score?trip_reference=${TRACKING_REF}`;
 
+const TRANSPORT_EVENTS_URL =
+`https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-transport-events?trip_reference=${TRACKING_REF}`;
 
 
 export default function DispatcherDashboard() {
@@ -23,6 +25,36 @@ const [expandedStepId, setExpandedStepId] = useState<string | null>(
 );
 const [readinessStatus, setReadinessStatus] =
 useState('Loading readiness...');
+async function loadTransportEvents() {
+try {
+const res = await fetch(TRANSPORT_EVENTS_URL, {
+cache: 'no-store',
+});
+
+const json = await res.json();
+
+if (!json.success) {
+setEventsStatus(
+json.error ||
+json.message ||
+'Could not load transport history'
+);
+return;
+}
+
+setTransportEvents(
+Array.isArray(json.events) ? json.events : []
+);
+
+setEventsStatus('Transport history connected');
+} catch {
+setEventsStatus('Could not load transport history');
+}
+}
+const [transportEvents, setTransportEvents] = useState<any[]>([]);
+const [eventsStatus, setEventsStatus] =
+useState('Loading transport history...');
+
 function getConnectionHealth(updatedAt?: string) {
 if (!updatedAt) {
 return {
@@ -150,6 +182,7 @@ setReadinessStatus('Could not load readiness');
 useEffect(() => {
 loadLocation();
 loadReadiness();
+loadTransportEvents();
 
 const locationTimer = setInterval(() => {
 loadLocation();
@@ -158,6 +191,10 @@ loadLocation();
 const readinessTimer = setInterval(() => {
 loadReadiness();
 }, 20000);
+
+const eventsTimer = setInterval(() => {
+loadTransportEvents();
+}, 10000);
 
 const mapTimer = setInterval(async () => {
 try {
@@ -175,6 +212,7 @@ console.error('Could not refresh map location');
 return () => {
 clearInterval(locationTimer);
 clearInterval(readinessTimer);
+clearInterval(eventsTimer);
 clearInterval(mapTimer);
 };
 }, []);
