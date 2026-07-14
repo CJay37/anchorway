@@ -249,6 +249,48 @@ const displayedReadiness =
 typeof readinessScore === 'number'
 ? `${readinessScore}%`
 : 'Checking';
+const operationsIntelligence = {
+currentSituation:
+latestTransportEvent?.details ||
+currentTripStatus ||
+'The latest transport situation is being confirmed.',
+
+waitingOn:
+latestTransportEvent?.waiting_on ||
+'No active dependency reported',
+
+actionNeeded:
+latestTransportEvent?.action_needed ||
+'No immediate action required',
+
+delayMinutes:
+typeof latestTransportEvent?.delay_minutes === 'number'
+? latestTransportEvent.delay_minutes
+: 0,
+
+delayReason:
+latestTransportEvent?.delay_reason ||
+'No active transportation delay reported',
+
+updatedBy:
+latestTransportEvent?.actor ||
+'AnchorWay system',
+
+aiNote:
+latestTransportEvent?.ai_note ||
+'AnchorWay is monitoring the transport for changes.',
+};
+
+const hasActiveDelay =
+operationsIntelligence.delayMinutes > 0 ||
+Boolean(latestTransportEvent?.delay_reason);
+
+const interventionStatus = hasActiveDelay
+? 'Attention may be needed'
+: operationsIntelligence.actionNeeded !== 'No immediate action required'
+? 'Action pending'
+: 'No intervention needed';
+
 const transportSteps = [
 {
 id: 'request_received',
