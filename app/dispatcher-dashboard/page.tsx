@@ -220,8 +220,30 @@ clearInterval(mapTimer);
 const readinessScore = readiness?.readiness_score;
 const readinessLabel = readiness?.readiness_label;
 const readinessIssues = readiness?.readiness_issues || [];
-const currentTransportStep = 'driver_en_route';
-const currentTripStatus = 'Driver en route to pickup';
+const latestTransportEvent =
+transportEvents.length > 0
+? transportEvents[transportEvents.length - 1]
+: null;
+
+const currentTransportStep =
+latestTransportEvent?.transport_status ||
+latestTransportEvent?.event_type ||
+'request_received';
+
+const currentTripStatus =
+latestTransportEvent?.headline ||
+'Transport request received';
+function getEventForStep(stepId: string) {
+const matchingEvents = transportEvents.filter(
+(event: any) =>
+event.transport_status === stepId ||
+event.event_type === stepId
+);
+
+return matchingEvents.length > 0
+? matchingEvents[matchingEvents.length - 1]
+: null;
+}
 const displayedEta = location?.eta || 'Updating';
 const displayedReadiness =
 typeof readinessScore === 'number'
@@ -581,7 +603,8 @@ lineHeight: 1.15,
 color: '#111827',
 }}
 >
-Driver en route to pickup
+{currentTripStatus}
+
 </h2>
 
 <p
@@ -821,6 +844,7 @@ transition: 'width 300ms ease',
 const isComplete = index < currentTransportIndex;
 const isCurrent = index === currentTransportIndex;
 const isUpcoming = index > currentTransportIndex;
+const stepEvent = getEventForStep(step.id);
 const isExpanded = expandedStepId === step.id;
 const stepDetails = transportStepDetails[step.id];
 
@@ -918,7 +942,9 @@ alignItems: 'center',
 gap: '10px',
 }}
 >
-<strong style={{ fontSize: '18px' }}>{step.label}</strong>
+<strong style={{ fontSize: '18px' }}>
+{stepEvent?.headline || step.label}
+</strong>
 
 <span
 style={{
@@ -967,8 +993,21 @@ marginBottom: 0,
 lineHeight: 1.5,
 }}
 >
-{step.description}
+{stepEvent?.details || step.description}
 </p>
+{stepEvent?.event_time && (
+<div
+style={{
+marginTop: '7px',
+fontSize: '12px',
+color: '#64748b',
+fontWeight: 600,
+}}
+>
+Updated{' '}
+{new Date(stepEvent.event_time).toLocaleString()}
+</div>
+)}
 {isExpanded && stepDetails && (
 <div
 onClick={(event) => event.stopPropagation()}
