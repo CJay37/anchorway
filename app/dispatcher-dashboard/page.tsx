@@ -694,127 +694,25 @@ color: '#14532d',
 </div>
 </div>
 
+{/* Live Operations Intelligence */}
 <div
 style={{
-display: 'grid',
-gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-gap: '14px',
+background: '#f8fafc',
+border: '1px solid #e2e8f0',
+borderRadius: '20px',
+padding: '22px',
 marginBottom: '22px',
-}}
->
-<div
-style={{
-background: '#f8fafc',
-border: '1px solid #e2e8f0',
-borderRadius: '18px',
-padding: '18px',
-}}
->
-<div
-style={{
-fontSize: '12px',
-fontWeight: 800,
-color: '#64748b',
-textTransform: 'uppercase',
-letterSpacing: '0.07em',
-}}
->
-Current Situation
-</div>
-
-<div
-style={{
-marginTop: '9px',
-fontSize: '17px',
-fontWeight: 750,
-color: '#0f172a',
-}}
->
-Driver is traveling to the pickup location.
-</div>
-</div>
-
-<div
-style={{
-background: '#fff7ed',
-border: '1px solid #fed7aa',
-borderRadius: '18px',
-padding: '18px',
-}}
->
-<div
-style={{
-fontSize: '12px',
-fontWeight: 800,
-color: '#9a3412',
-textTransform: 'uppercase',
-letterSpacing: '0.07em',
-}}
->
-Waiting On
-</div>
-
-<div
-style={{
-marginTop: '9px',
-fontSize: '17px',
-fontWeight: 750,
-color: '#7c2d12',
-}}
->
-Sending hospital
-</div>
-</div>
-
-<div
-style={{
-background: '#eff6ff',
-border: '1px solid #bfdbfe',
-borderRadius: '18px',
-padding: '18px',
-}}
->
-<div
-style={{
-fontSize: '12px',
-fontWeight: 800,
-color: '#1d4ed8',
-textTransform: 'uppercase',
-letterSpacing: '0.07em',
-}}
->
-Action Needed
-</div>
-
-<div
-style={{
-marginTop: '9px',
-fontSize: '17px',
-fontWeight: 750,
-color: '#1e3a8a',
-}}
->
-Complete discharge paperwork
-</div>
-</div>
-</div>
-
-<div
-style={{
-background: '#f8fafc',
-border: '1px solid #e2e8f0',
-borderRadius: '18px',
-padding: '18px',
 }}
 >
 <div
 style={{
 display: 'flex',
 justifyContent: 'space-between',
+alignItems: 'flex-start',
 gap: '16px',
-alignItems: 'center',
 flexWrap: 'wrap',
-marginBottom: '12px',
+paddingBottom: '18px',
+borderBottom: '1px solid #e2e8f0',
 }}
 >
 <div>
@@ -822,11 +720,248 @@ marginBottom: '12px',
 style={{
 fontSize: '12px',
 fontWeight: 800,
+color: '#166534',
+textTransform: 'uppercase',
+letterSpacing: '0.08em',
+marginBottom: '7px',
+}}
+>
+Current Operation
+</div>
+
+<div
+style={{
+fontSize: '22px',
+fontWeight: 800,
+color: '#0f172a',
+lineHeight: 1.25,
+}}
+>
+{latestTransportEvent?.headline || currentTripStatus}
+</div>
+</div>
+
+<div
+style={{
+background:
+Number(latestTransportEvent?.delay_minutes || 0) > 0
+? '#fef2f2'
+: '#ecfdf3',
+border:
+Number(latestTransportEvent?.delay_minutes || 0) > 0
+? '1px solid #fecaca'
+: '1px solid #bbf7d0',
+borderRadius: '999px',
+padding: '8px 12px',
+fontSize: '12px',
+fontWeight: 800,
+color:
+Number(latestTransportEvent?.delay_minutes || 0) > 0
+? '#991b1b'
+: '#166534',
+whiteSpace: 'nowrap',
+}}
+>
+{Number(latestTransportEvent?.delay_minutes || 0) > 0
+? `${latestTransportEvent.delay_minutes} min delay`
+: 'On track'}
+</div>
+</div>
+
+<div
+style={{
+display: 'grid',
+gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+gap: '14px',
+marginTop: '18px',
+}}
+>
+<div
+style={{
+background: '#ffffff',
+border: '1px solid #e2e8f0',
+borderRadius: '16px',
+padding: '16px',
+}}
+>
+<div
+style={{
+fontSize: '11px',
+fontWeight: 800,
 color: '#64748b',
 textTransform: 'uppercase',
 letterSpacing: '0.07em',
+marginBottom: '7px',
 }}
 >
+Last Update
+</div>
+
+<div
+style={{
+fontSize: '15px',
+fontWeight: 700,
+color: '#1e293b',
+}}
+>
+{latestTransportEvent?.event_time
+? new Date(
+latestTransportEvent.event_time
+).toLocaleString()
+: location?.updated_at
+? new Date(location.updated_at).toLocaleString()
+: 'Waiting for update'}
+</div>
+</div>
+
+<div
+style={{
+background: '#ffffff',
+border: '1px solid #e2e8f0',
+borderRadius: '16px',
+padding: '16px',
+}}
+>
+<div
+style={{
+fontSize: '11px',
+fontWeight: 800,
+color: '#64748b',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+marginBottom: '7px',
+}}
+>
+Waiting On
+</div>
+
+<div
+style={{
+fontSize: '15px',
+fontWeight: 700,
+color: '#1e293b',
+}}
+>
+{latestTransportEvent?.waiting_on ||
+'No party currently identified'}
+</div>
+</div>
+
+<div
+style={{
+background: '#ffffff',
+border: '1px solid #e2e8f0',
+borderRadius: '16px',
+padding: '16px',
+}}
+>
+<div
+style={{
+fontSize: '11px',
+fontWeight: 800,
+color: '#64748b',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+marginBottom: '7px',
+}}
+>
+Action Needed
+</div>
+
+<div
+style={{
+fontSize: '15px',
+fontWeight: 700,
+color: '#1e293b',
+}}
+>
+{latestTransportEvent?.action_needed ||
+'No immediate action required'}
+</div>
+</div>
+
+<div
+style={{
+background: '#ffffff',
+border: '1px solid #e2e8f0',
+borderRadius: '16px',
+padding: '16px',
+}}
+>
+<div
+style={{
+fontSize: '11px',
+fontWeight: 800,
+color: '#64748b',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+marginBottom: '7px',
+}}
+>
+Updated By
+</div>
+
+<div
+style={{
+fontSize: '15px',
+fontWeight: 700,
+color: '#1e293b',
+}}
+>
+{latestTransportEvent?.actor || 'AnchorWay system'}
+</div>
+</div>
+</div>
+
+{(latestTransportEvent?.delay_reason ||
+latestTransportEvent?.ai_note) && (
+<div
+style={{
+marginTop: '18px',
+padding: '18px',
+background:
+Number(latestTransportEvent?.delay_minutes || 0) > 0
+? '#fff7ed'
+: '#eff6ff',
+border:
+Number(latestTransportEvent?.delay_minutes || 0) > 0
+? '1px solid #fed7aa'
+: '1px solid #bfdbfe',
+borderRadius: '16px',
+}}
+>
+<div
+style={{
+fontSize: '11px',
+fontWeight: 800,
+color:
+Number(latestTransportEvent?.delay_minutes || 0) > 0
+? '#9a3412'
+: '#1d4ed8',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+marginBottom: '7px',
+}}
+>
+{latestTransportEvent?.delay_reason
+? 'Delay Explanation'
+: 'AnchorWay Insight'}
+</div>
+
+<div
+style={{
+fontSize: '15px',
+lineHeight: 1.55,
+fontWeight: 650,
+color: '#1e293b',
+}}
+>
+{latestTransportEvent?.delay_reason ||
+latestTransportEvent?.ai_note}
+</div>
+</div>
+)}
+</div>
 Transport Readiness
 </div>
 
