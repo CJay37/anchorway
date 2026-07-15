@@ -1021,7 +1021,6 @@ transition: 'width 300ms ease',
 }}
 />
 </div>
-</div>
 </section>
 </div>
 
