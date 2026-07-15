@@ -11,16 +11,53 @@ const LOCATION_URL =
 const READINESS_URL =
 `https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/update-readiness-score?trip_reference=${TRACKING_REF}`;
 
+const ACTION_CENTER_URL =
+`https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-action-center?trip_reference=${TRACKING_REF}`;
+
 const TRANSPORT_EVENTS_URL =
 `https://xjqxtgejkrarlteximpy.supabase.co/functions/v1/get-transport-events?trip_reference=${TRACKING_REF}`;
 
+type ActionCenterNotification = {
+id: string;
+trip_reference: string;
+alert_id: string | null;
+recipient_name: string | null;
+recipient_role: string;
+notification_type: string;
+severity: "info" | "warning" | "urgent" | "critical"
+title: string;
+message: string;
+action_required: boolean;
+action_label: string | null;
+delivery_status: string;
+acknowledged: boolean;
+acknowledged_by: string | null;
+acknowledged_at: string | null;
+resolved: boolean;
+created_at: string;
+};
 
+type ActionCenterResponse = {
+success: boolean;
+summary?: {
+total_active: number;
+urgent_or_critical: number;
+warnings: number;
+unacknowledged: number;
+};
+notifications?: ActionCenterNotification[];
+error?: string;
+};
 export default function DispatcherDashboard() {
 const [location, setLocation] = useState<any>(null);
 const [mapLocation, setMapLocation] = useState<any>(null);
 const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
 const [readiness, setReadiness] = useState<any>(null);
 const [expandedStepId, setExpandedStepId] = useState<string | null>(
+const [actionCenterData, setActionCenterData] = useState<any>(null);
+const [actionCenterStatus, setActionCenterStatus] =
+useState("Loading Action Center...");
+
 'driver_en_route'
 );
 const [readinessStatus, setReadinessStatus] =
@@ -54,7 +91,35 @@ setEventsStatus('Could not load transport history');
 const [transportEvents, setTransportEvents] = useState<any[]>([]);
 const [eventsStatus, setEventsStatus] =
 useState('Loading transport history...');
+async function loadActionCenter() {
+try {
+setActionCenterStatus("Loading Action Center...");
 
+const response = await fetch(ACTION_CENTER_URL, {
+method: "GET",
+headers: {
+"Content-Type": "application/json",
+},
+cache: "no-store",
+});
+
+const result = await response.json();
+
+if (!response.ok || result?.success !== true) {
+throw new Error(
+result?.error || "Unable to load Action Center."
+);
+}
+
+setActionCenterData(result);
+setActionCenterStatus("Action Center connected");
+} catch (error) {
+console.error("Action Center loading error:", error);
+
+setActionCenterData(null);
+setActionCenterStatus("Action Center unavailable");
+}
+}
 function getConnectionHealth(updatedAt?: string) {
 if (!updatedAt) {
 return {
@@ -180,6 +245,7 @@ setReadinessStatus('Could not load readiness');
 }
 
 useEffect(() => {
+loadActionCenter();
 loadLocation();
 loadReadiness();
 loadTransportEvents();
