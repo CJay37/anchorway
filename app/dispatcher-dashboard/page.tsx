@@ -961,7 +961,16 @@ latestTransportEvent?.ai_note}
 </div>
 </div>
 )}
-</div>
+<div>
+<div
+style={{
+fontSize: '12px',
+fontWeight: 800,
+color: '#64748b',
+textTransform: 'uppercase',
+letterSpacing: '0.07em',
+}}
+>
 Transport Readiness
 </div>
 
