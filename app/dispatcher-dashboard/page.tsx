@@ -53,13 +53,12 @@ const [location, setLocation] = useState<any>(null);
 const [mapLocation, setMapLocation] = useState<any>(null);
 const [gpsStatus, setGpsStatus] = useState('Loading live GPS...');
 const [readiness, setReadiness] = useState<any>(null);
-const [expandedStepId, setExpandedStepId] = useState<string | null>(
+const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
 const [actionCenterData, setActionCenterData] = useState<any>(null);
 const [actionCenterStatus, setActionCenterStatus] =
 useState("Loading Action Center...");
 
-'driver_en_route'
-);
+
 const [readinessStatus, setReadinessStatus] =
 useState('Loading readiness...');
 async function loadTransportEvents() {
