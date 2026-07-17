@@ -487,8 +487,6 @@ delayReason: 'Not yet available',
 updatedBy: 'Transport crew',
 },
 };
-return (
-<main className="dashboardPage">
 async function loadActionCenter() {
 try {
 setActionCenterStatus("Loading Action Center...");
@@ -513,11 +511,12 @@ setActionCenterData(result);
 setActionCenterStatus("Action Center connected");
 } catch (error) {
 console.error("Action Center loading error:", error);
-
 setActionCenterData(null);
 setActionCenterStatus("Action Center unavailable");
 }
 }
+return (
+<main className="dashboardPage">
 <nav className="nav">
 <Link href="/" className="brand">
 <span className="logo">⚓</span>
