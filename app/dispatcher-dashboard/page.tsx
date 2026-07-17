@@ -489,6 +489,35 @@ updatedBy: 'Transport crew',
 };
 return (
 <main className="dashboardPage">
+async function loadActionCenter() {
+try {
+setActionCenterStatus("Loading Action Center...");
+
+const response = await fetch(ACTION_CENTER_URL, {
+method: "GET",
+headers: {
+"Content-Type": "application/json",
+},
+cache: "no-store",
+});
+
+const result = await response.json();
+
+if (!response.ok || result?.success !== true) {
+throw new Error(
+result?.error || "Unable to load Action Center."
+);
+}
+
+setActionCenterData(result);
+setActionCenterStatus("Action Center connected");
+} catch (error) {
+console.error("Action Center loading error:", error);
+
+setActionCenterData(null);
+setActionCenterStatus("Action Center unavailable");
+}
+}
 <nav className="nav">
 <Link href="/" className="brand">
 <span className="logo">⚓</span>
