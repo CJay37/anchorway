@@ -487,25 +487,6 @@ delayReason: 'Not yet available',
 updatedBy: 'Transport crew',
 },
 };
-async function loadActionCenter() {
-try {
-setActionCenterStatus("Loading Action Center...");
-
-const response = await fetch(ACTION_CENTER_URL, {
-method: "GET",
-headers: {
-"Content-Type": "application/json",
-},
-cache: "no-store",
-});
-
-const result = await response.json();
-
-if (!response.ok || result?.success !== true) {
-throw new Error(
-result?.error || "Unable to load Action Center."
-);
-}
 
 setActionCenterData(result);
 setActionCenterStatus("Action Center connected");
