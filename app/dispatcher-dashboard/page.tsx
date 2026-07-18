@@ -510,14 +510,13 @@ notifications={actionCenterData?.notifications ?? []}
 <section className="dashboardHero">
 <div>
 <span className="eyebrow">
-Live Dispatcher Map
+Live Transport Operations
 </span>
 
-<h1>Dispatcher live transport view</h1>
+<h1>Transport Operations Center</h1>
 
 <p>
-Monitor active transport location, readiness,
-and delays in real time.
+Monitor,coordinate, and resolve active transports from one shared optional view.
 </p>
 </div>
 
