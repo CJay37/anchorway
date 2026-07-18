@@ -503,7 +503,10 @@ className="navLink"
 View Public Tracker
 </Link>
 </nav>
-
+<ActionCenterPanel
+status={actionCenterStatus}
+notifications={actionCenterData?.notifications ?? []}
+/>
 <section className="dashboardHero">
 <div>
 <span className="eyebrow">
