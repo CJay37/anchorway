@@ -151,7 +151,7 @@ message: 'GPS temporarily stopped'
 
 return {
 label: '🔴 Offline',
-message: 'Driver device disconnected'
+message: 'Crew device disconnected'
 };
 }
 
@@ -364,19 +364,19 @@ label: 'Request received',
 description: 'The transport request was successfully created.',
 },
 {
-id: 'driver_assigned',
-label: 'Driver assigned',
-description: 'A driver has been assigned to this trip.',
+id: 'crew_assigned',
+label: 'Crew assigned',
+description: 'A crew has been assigned to this trip.',
 },
 {
-id: 'driver_en_route',
-label: 'Driver en route to pickup',
-description: 'The driver is traveling to the pickup location.',
+id: 'crew_en_route',
+label: 'Crew en route to pickup',
+description: 'The crew is traveling to the pickup location.',
 },
 {
 id: 'arrived_pickup',
 label: 'Arrived at pickup',
-description: 'The driver has reached the pickup location.',
+description: 'The crew has reached the pickup location.',
 },
 {
 id: 'patient_onboard',
@@ -426,21 +426,21 @@ updatedBy: 'Sending facility',
 driver_assigned: {
 time: '2:12 PM',
 situation: 'A transport crew has been assigned.',
-waitingOn: 'Driver departure confirmation',
+waitingOn: 'Crew departure confirmation',
 actionNeeded: 'Confirm the crew has the necessary transport information.',
 delayReason: 'No delay reported',
 updatedBy: 'Transport dispatcher',
 },
 
-driver_en_route: {
+crew_en_route: {
 time: location?.updated_at
 ? new Date(location.updated_at).toLocaleTimeString()
 : 'Updating',
-situation: 'The driver is traveling to the pickup location.',
+situation: 'The crew is traveling to the pickup location.',
 waitingOn: 'Sending hospital',
 actionNeeded: 'Complete discharge paperwork before the crew arrives.',
 delayReason: 'No active transportation delay reported',
-updatedBy: location?.driver_name || 'Driver GPS',
+updatedBy: location?.crew_name || 'Driver GPS',
 },
 
 arrived_pickup: {
@@ -544,7 +544,7 @@ opacity: 0.75,
 marginBottom: '12px',
 }}
 >
-Driver GPS Connection
+Crew GPS Connection
 </span>
 
 <div
@@ -608,8 +608,8 @@ Trip {TRACKING_REF}
 <h2>🚑 {TRACKING_REF}</h2>
 
 <p>
-<strong>Driver:</strong>{' '}
-{location?.driver_name || 'Waiting...'}
+<strong>Crew:</strong>{' '}
+{location?.crew_name || 'Waiting...'}
 </p>
 
 <p>
