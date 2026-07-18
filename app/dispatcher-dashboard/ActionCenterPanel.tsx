@@ -1,5 +1,5 @@
 'use client';
-
+, 
 import React from 'react';
 
 type ActionCenterNotification = {
@@ -44,7 +44,7 @@ fontSize: 22,
 fontWeight: 700,
 }}
 >
-Action Center
+Operations Intelligence
 </h2>
 
 <span
@@ -66,7 +66,7 @@ background: '#f8fafc',
 color: '#64748b',
 }}
 >
-No active operational alerts.
+All active transports are operating normally.
 </div>
 ) : (
 notifications.map((item) => (
