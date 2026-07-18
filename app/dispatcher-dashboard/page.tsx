@@ -487,15 +487,6 @@ delayReason: 'Not yet available',
 updatedBy: 'Transport crew',
 },
 };
-
-setActionCenterData(result);
-setActionCenterStatus("Action Center connected");
-} catch (error) {
-console.error("Action Center loading error:", error);
-setActionCenterData(null);
-setActionCenterStatus("Action Center unavailable");
-}
-}
 return (
 <main className="dashboardPage">
 <nav className="nav">
