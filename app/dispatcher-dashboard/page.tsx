@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ActionCenterPanel from "./ActionCenterPanel"
+import { analyzeTransport } from "./services/intelligenceEngine";
+
 
 const TRACKING_REF = 'BW-3608';
 
@@ -488,6 +490,19 @@ delayReason: 'Not yet available',
 updatedBy: 'Transport crew',
 },
 };
+
+const transportIntelligence = analyzeTransport([
+{
+eventName: "Transport Requested",
+waitingOn: "Transport Coordination",
+impact: "neutral",
+healthScoreChange: 0,
+requiredAction: "Continue monitoring.",
+etaImpactMinutes: 0,
+aiSummary:
+"The transport request has been received and is awaiting the next operational step.",
+},
+]);
 return (
 <main className="dashboardPage">
 <nav className="nav">
@@ -506,6 +521,7 @@ View Public Tracker
 <ActionCenterPanel
 status={actionCenterStatus}
 notifications={actionCenterData?.notifications ?? []}
+intelligence={transportIntelligence}
 />
 <section className="dashboardHero">
 <div>
