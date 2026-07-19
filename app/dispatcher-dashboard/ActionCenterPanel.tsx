@@ -1,7 +1,7 @@
 'use client';
  
 import React from 'react';
-
+import type { TransportIntelligence } from './services/intelligenceEngine';
 type ActionCenterNotification = {
 id: string;
 title: string;
@@ -13,11 +13,13 @@ createdAt: string;
 type Props = {
 status: string;
 notifications?: ActionCenterNotification[];
+intelligence?: TransportIntelligence;
 };
 
 export default function ActionCenterPanel({
 status,
 notifications = [],
+intelligence,
 }: Props) {
 return (
 <div
