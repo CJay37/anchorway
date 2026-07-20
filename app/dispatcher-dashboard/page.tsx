@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ActionCenterPanel from "./ActionCenterPanel"
 import { analyzeTransport } from "./services/intelligenceEngine";
+import { createNotificationJobs } from "./services/notificationEngine"
+
 
 
 const TRACKING_REF = 'BW-3608';
@@ -503,6 +505,15 @@ aiSummary:
 "The transport request has been received and is awaiting the next operational step.",
 },
 ]);
+const notificationPreview = createNotificationJobs({
+eventName: "Transport Requested",
+patientName: "Patient",
+eta: "Pending",
+etaImpactMinutes: 0,
+waitingOn: transportIntelligence.waitingOn,
+reason: transportIntelligence.aiSummary,
+});
+void notificationPreview;
 return (
 <main className="dashboardPage">
 <nav className="nav">
