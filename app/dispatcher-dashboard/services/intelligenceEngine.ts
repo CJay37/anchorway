@@ -1,3 +1,4 @@
+import { analyzeResponsibility } from "./responsibilityEngine"
 export type IntelligenceInputEvent = {
 eventName: string;
 waitingOn?: string;
@@ -35,6 +36,8 @@ events.reduce(
 
 const latestEvent = events.at(-1);
 
+const responsibility = analyzeResponsibility(events);
+
 const etaImpactMinutes = events.reduce(
 (total, event) => total + (event.etaImpactMinutes ?? 0),
 0
@@ -57,11 +60,12 @@ healthScore >= 85
 return {
 healthScore,
 healthStatus,
-waitingOn: latestEvent?.waitingOn ?? 'Nobody',
+waitingOn: responsibility.waitingOn,
 operationalRisk,
 recommendedAction:
-latestEvent?.requiredAction ?? 'Continue monitoring.',
-etaImpactMinutes,
+responsibility.requiredAction,
+etaImpactMinutes:
+responsibility.estimatedImpactMinutes,
 aiSummary:
 latestEvent?.aiSummary ??
 'No significant operational issues are currently detected.',
