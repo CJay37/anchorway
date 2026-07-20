@@ -18,9 +18,21 @@ waitingOn?: string;
 export type NotificationPolicyResult = {
 recipients: NotificationRecipient[];
 priority: 'low' | 'normal' | 'high' | 'critical';
+
+channels: (
+| 'sms'
+| 'email'
+| 'push'
+| 'voice'
+| 'dashboard'
+)[];
+
+requiresAcknowledgement: boolean;
+
+escalateAfterMinutes?: number;
 };
 
-export function determineNotificationRecipients(
+export function determineCommunicationPolicy(
 input: NotificationPolicyInput
 ): NotificationPolicyResult {
 
@@ -31,8 +43,19 @@ return {
 recipients: [
 'Operations Center',
 'Transport Provider',
+'Sending Facility',
+'Receiving Facility',
+'Patient',
 ],
+
 priority: 'normal',
+
+channels: [
+'dashboard',
+'sms',
+],
+
+requiresAcknowledgement: false,
 };
 
 case 'Transport Accepted':
@@ -104,7 +127,14 @@ return {
 recipients: [
 'Operations Center',
 ],
+
 priority: 'low',
+
+channels: [
+'dashboard',
+],
+
+requiresAcknowledgement: false,
 };
 }
 }
