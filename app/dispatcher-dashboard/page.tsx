@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ActionCenterPanel from "./ActionCenterPanel"
+import CommunicationPreviewPanel from "./CommunicationPreviewPanel"
 import { analyzeTransport } from "./services/intelligenceEngine";
 import { createNotificationJobs } from "./services/notificationEngine"
 
@@ -513,7 +514,7 @@ etaImpactMinutes: 0,
 waitingOn: transportIntelligence.waitingOn,
 reason: transportIntelligence.aiSummary,
 });
-void notificationPreview;
+
 return (
 <main className="dashboardPage">
 <nav className="nav">
@@ -533,6 +534,9 @@ View Public Tracker
 status={actionCenterStatus}
 notifications={actionCenterData?.notifications ?? []}
 intelligence={transportIntelligence}
+/>
+<CommunicationPreviewPanel
+preview={notificationPreview}
 />
 <section className="dashboardHero">
 <div>
