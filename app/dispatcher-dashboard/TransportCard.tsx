@@ -1,3 +1,4 @@
+import TransportActionPanel from "./TransportActionPanel"
 export type TransportCardData = {
 tripReference: string;
 patientName: string;
@@ -372,6 +373,12 @@ View Details
 </button>
 </div>
 </div>
+<TransportActionPanel
+tripReference={transport.tripReference}
+patientName={transport.patientName}
+healthStatus={transport.healthStatus}
+waitingOn={transport.waitingOn}
+/>
 </article>
 );
 }
