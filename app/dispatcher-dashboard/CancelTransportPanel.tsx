@@ -15,9 +15,19 @@ export type CancellationReason =
 | "Sending facility handling internally"
 | "Other"
 
+export type CancellationResult = {
+tripReference: string;
+reason: string;
+allowRestart: boolean;
+cancellationStatus: "Cancelled" | "Awaiting Reschedule"
+cancelledAt: string;
+notificationRecipients: string[];
+};
+
 type CancelTransportPanelProps = {
 tripReference: string;
 onClose: () => void;
+onConfirm?: (result: CancellationResult) => void;
 };
 
 const cancellationReasons: CancellationReason[] = [
@@ -47,6 +57,7 @@ const notificationRecipients = [
 export default function CancelTransportPanel({
 tripReference,
 onClose,
+onConfirm,
 }: CancelTransportPanelProps) {
 const [selectedReason, setSelectedReason] =
 useState<CancellationReason | "">("");
@@ -54,6 +65,8 @@ useState<CancellationReason | "">("");
 const [otherReason, setOtherReason] = useState("");
 const [allowRestart, setAllowRestart] = useState(true);
 const [confirmed, setConfirmed] = useState(false);
+const [cancellationResult, setCancellationResult] =
+useState<CancellationResult | null>(null);
 
 const finalReason =
 selectedReason === "Other" ? otherReason.trim() : selectedReason;
@@ -67,7 +80,20 @@ if (!canConfirm) {
 return;
 }
 
+const result: CancellationResult = {
+tripReference,
+reason: finalReason,
+allowRestart,
+cancellationStatus: allowRestart
+? "Awaiting Reschedule"
+: "Cancelled",
+cancelledAt: new Date().toISOString(),
+notificationRecipients,
+};
+
+setCancellationResult(result);
 setConfirmed(true);
+onConfirm?.(result);
 }
 
 return (
@@ -375,7 +401,7 @@ lineHeight: 1.6,
 color: "#991b1b",
 }}
 >
-Reason: {finalReason}
+Reason: {cancellationResult?.reason}
 </p>
 
 <p
@@ -386,9 +412,33 @@ lineHeight: 1.6,
 color: "#991b1b",
 }}
 >
-Restart preserved: {allowRestart ? "Yes" : "No"}
+Restart preserved:{" "}
+{cancellationResult?.allowRestart ? "Yes" : "No"}
+</p>
+<p
+style={{
+margin: "5px 0 0",
+fontSize: "13px",
+lineHeight: 1.6,
+color: "#991b1b",
+}}
+>
+Status: {cancellationResult?.cancellationStatus}
 </p>
 
+<p
+style={{
+margin: "5px 0 0",
+fontSize: "13px",
+lineHeight: 1.6,
+color: "#991b1b",
+}}
+>
+Recorded at:{" "}
+{cancellationResult
+? new Date(cancellationResult.cancelledAt).toLocaleString()
+: "Pending"}
+</p>
 <p
 style={{
 margin: "12px 0 0",
