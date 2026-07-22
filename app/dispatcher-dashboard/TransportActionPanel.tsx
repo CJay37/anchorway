@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import CancelTransportPanel from "./CancelTransportPanel"
 
 export type TransportAction =
 | "Update ETA"
@@ -99,6 +100,7 @@ tripReference,
 cancellationStatus = "Active",
 }: TransportActionPanelProps) {
 const [isOpen, setIsOpen] = useState(false);
+const [showCancellation, setShowCancellation] = useState(false);
 const actions = isInactiveTransport(cancellationStatus)
 ? inactiveActions
 : activeActions;
@@ -207,6 +209,11 @@ return (
 <button
 key={action}
 type="button"
+onClick={() => {
+if (action === "Cancel Transport") {
+setShowCancellation(true);
+}
+}}
 aria-label={`${action} for transport ${tripReference}`}
 style={{
 width: "100%",
@@ -263,6 +270,18 @@ color: destructive ? "#b91c1c" : "#94a3b8",
 );
 })}
 </div>
+</div>
+)}
+{showCancellation && (
+<div
+style={{
+padding: "0 14px 14px",
+}}
+>
+<CancelTransportPanel
+tripReference={tripReference}
+onClose={() => setShowCancellation(false)}
+/>
 </div>
 )}
 </section>
