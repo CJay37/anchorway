@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import CancelTransportPanel from "./CancelTransportPanel"
+import CancelTransportPanel, {
+type CancellationResult,
+} from "./CancelTransportPanel"
 
 export type TransportAction =
 | "Update ETA"
@@ -23,6 +25,9 @@ cancellationStatus?:
 | "Awaiting Reschedule"
 | "Completed Internally"
 | "Superseded"
+onCancellationConfirmed?: (
+result: CancellationResult
+) => void;
 };
 
 const activeActions: TransportAction[] = [
@@ -98,6 +103,7 @@ return action === "Cancel Transport"
 export default function TransportActionPanel({
 tripReference,
 cancellationStatus = "Active",
+onCancellationConfirmed,
 }: TransportActionPanelProps) {
 const [isOpen, setIsOpen] = useState(false);
 const [showCancellation, setShowCancellation] = useState(false);
@@ -281,6 +287,10 @@ padding: "0 14px 14px",
 <CancelTransportPanel
 tripReference={tripReference}
 onClose={() => setShowCancellation(false)}
+onConfirm={(result) => {
+onCancellationConfirmed?.(result);
+setShowCancellation(false);
+}}
 />
 </div>
 )}
