@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ActionCenterPanel from "./ActionCenterPanel"
 import CommunicationPreviewPanel from "./CommunicationPreviewPanel"
+import TransportCommandBoard from "./TransportCommandBoard"
+import { mockTransports } from "./data/mockTransports"
 import { analyzeTransport } from "./services/intelligenceEngine";
 import { createNotificationJobs } from "./services/notificationEngine"
 
@@ -537,6 +539,9 @@ intelligence={transportIntelligence}
 />
 <CommunicationPreviewPanel
 preview={notificationPreview}
+/>
+<TransportCommandBoard
+transports={mockTransports}
 />
 <section className="dashboardHero">
 <div>
