@@ -1,3 +1,7 @@
+"use client"
+
+import { useState } from "react"
+
 export type TransportAction =
 | "Update ETA"
 | "Notify Stakeholders"
@@ -94,6 +98,7 @@ export default function TransportActionPanel({
 tripReference,
 cancellationStatus = "Active",
 }: TransportActionPanelProps) {
+const [isOpen, setIsOpen] = useState(false);
 const actions = isInactiveTransport(cancellationStatus)
 ? inactiveActions
 : activeActions;
@@ -108,16 +113,28 @@ background: "#ffffff",
 overflow: "hidden",
 }}
 >
-<div
+<button
+type="button"
+onClick={() => setIsOpen((current) => !current)}
+aria-expanded={isOpen}
+aria-controls={`transport-actions-${tripReference}`}
 style={{
+width: "100%",
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center",
+gap: "16px",
 padding: "16px 18px",
-borderBottom: "1px solid #e2e8f0",
+border: 0,
 background: "#f8fafc",
+textAlign: "left",
+cursor: "pointer",
 }}
 >
-<p
+<span>
+<span
 style={{
-margin: 0,
+display: "block",
 fontSize: "11px",
 fontWeight: 800,
 letterSpacing: "0.08em",
@@ -126,28 +143,53 @@ color: "#64748b",
 }}
 >
 Operations Actions
-</p>
+</span>
 
-<h3
+<span
 style={{
-margin: "5px 0 0",
-fontSize: "18px",
+display: "block",
+marginTop: "5px",
+fontSize: "16px",
+fontWeight: 800,
 color: "#0f172a",
 }}
 >
 Manage {tripReference}
-</h3>
+</span>
+</span>
 
+<span
+aria-hidden="true"
+style={{
+fontSize: "20px",
+color: "#64748b",
+transform: isOpen ? "rotate(90deg)" : "rotate(0deg)",
+transition: "transform 160ms ease",
+}}
+>
+›
+</span>
+</button>
+
+{isOpen && (
+<div id={`transport-actions-${tripReference}`}>
+<div
+style={{
+padding: "14px 18px",
+borderTop: "1px solid #e2e8f0",
+borderBottom: "1px solid #e2e8f0",
+}}
+>
 <p
 style={{
-margin: "6px 0 0",
+margin: 0,
 fontSize: "13px",
 lineHeight: 1.5,
 color: "#64748b",
 }}
 >
-Choose an operational action. No changes are made until the action is
-confirmed.
+Choose an operational action. No changes are made until the action
+is confirmed.
 </p>
 </div>
 
@@ -221,6 +263,7 @@ color: destructive ? "#b91c1c" : "#94a3b8",
 );
 })}
 </div>
+</div>
+)}
 </section>
 );
-}
