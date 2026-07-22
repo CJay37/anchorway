@@ -375,9 +375,7 @@ View Details
 </div>
 <TransportActionPanel
 tripReference={transport.tripReference}
-patientName={transport.patientName}
-healthStatus={transport.healthStatus}
-waitingOn={transport.waitingOn}
+cancellationStatus={transport.cancellationStatus}
 />
 </article>
 );
