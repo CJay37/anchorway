@@ -28,6 +28,7 @@ cancellationStatus?:
 onCancellationConfirmed?: (
 result: CancellationResult
 ) => void;
+onRestartRequested?: () => void;
 };
 
 const activeActions: TransportAction[] = [
@@ -104,6 +105,7 @@ export default function TransportActionPanel({
 tripReference,
 cancellationStatus = "Active",
 onCancellationConfirmed,
+onRestartRequested,
 }: TransportActionPanelProps) {
 const [isOpen, setIsOpen] = useState(false);
 const [showCancellation, setShowCancellation] = useState(false);
@@ -218,6 +220,12 @@ type="button"
 onClick={() => {
 if (action === "Cancel Transport") {
 setShowCancellation(true);
+return;
+}
+
+if (action === "Restart Transport") {
+onRestartRequested?.();
+setIsOpen(false);
 }
 }}
 aria-label={`${action} for transport ${tripReference}`}
