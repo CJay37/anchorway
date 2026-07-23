@@ -1,9 +1,20 @@
-import type { SupabaseClient } from "@supabase/supabase-js"
+
 
 import type {
 TransportLifecycleEvent,
 } from "./transportLifecycleEngine"
-
+type SupabaseClient = {
+from: (table: string) => {
+upsert: (
+values: unknown,
+options?: unknown
+) => Promise<{
+error: {
+message: string;
+} | null;
+}>
+};
+};
 export type SaveLifecycleEventResult = {
 success: boolean;
 event: TransportLifecycleEvent;
