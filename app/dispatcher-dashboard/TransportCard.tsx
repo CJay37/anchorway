@@ -4,6 +4,11 @@ import { useState } from "react"
 
 import TransportActionPanel from "./TransportActionPanel"
 import type { CancellationResult } from "./CancelTransportPanel"
+import {
+createTransportCancellationEvent,
+createTransportRestartEvent,
+type TransportLifecycleEvent,
+} from "./services/transportLifecycleEngine"
 export type TransportCardData = {
 tripReference: string;
 patientName: string;
@@ -65,6 +70,9 @@ transport,
 }: TransportCardProps) {
 const [cancellationResult, setCancellationResult] =
 useState<CancellationResult | null>(null);
+const [lifecycleEvents, setLifecycleEvents] =
+useState<TransportLifecycleEvent[]>([]);
+
 
 const currentCancellationStatus =
 cancellationResult?.cancellationStatus ??
@@ -181,14 +189,14 @@ fontWeight: 700,
 : transport.status} 
 </div>
 </div>
-{cancellationResult && (
+{lifecycleEvents.length > 0 && (
 <div
 style={{
 marginTop: "10px",
 padding: "12px 14px",
 borderRadius: "12px",
-border: "1px solid #fecaca",
-background: "#fef2f2",
+border: "1px solid #dbeafe",
+background: "#eff6ff",
 }}
 >
 <p
@@ -198,21 +206,40 @@ fontSize: "11px",
 fontWeight: 800,
 letterSpacing: "0.08em",
 textTransform: "uppercase",
-color: "#991b1b",
+color: "#1d4ed8",
 }}
 >
-Cancellation Reason
+Latest Lifecycle Event
 </p>
 
 <p
 style={{
 margin: "6px 0 0",
 fontSize: "14px",
-lineHeight: 1.5,
-color: "#7f1d1d",
+fontWeight: 800,
+color: "#1e3a8a",
 }}
 >
-{cancellationResult.reason}
+{
+lifecycleEvents[
+lifecycleEvents.length - 1
+].eventName
+}
+</p>
+
+<p
+style={{
+margin: "5px 0 0",
+fontSize: "13px",
+lineHeight: 1.5,
+color: "#1e40af",
+}}
+>
+{
+lifecycleEvents[
+lifecycleEvents.length - 1
+].aiSummary
+}
 </p>
 </div>
 )}
@@ -423,9 +450,40 @@ View Details
 tripReference={transport.tripReference}
 cancellationStatus={currentCancellationStatus}
 onCancellationConfirmed={(result) => {
+const lifecycleEvent =
+createTransportCancellationEvent({
+tripReference: result.tripReference,
+reason: result.reason,
+allowRestart: result.allowRestart,
+createdAt: result.cancelledAt,
+notificationRecipients:
+result.notificationRecipients,
+});
+
 setCancellationResult(result);
+
+setLifecycleEvents((currentEvents) => [
+...currentEvents,
+lifecycleEvent,
+]);
 }}
 onRestartRequested={() => {
+const previousStatus =
+currentCancellationStatus === "Cancelled"
+? "Cancelled"
+: "Awaiting Reschedule"
+
+const lifecycleEvent =
+createTransportRestartEvent({
+tripReference: transport.tripReference,
+previousStatus,
+});
+
+setLifecycleEvents((currentEvents) => [
+...currentEvents,
+lifecycleEvent,
+]);
+
 setCancellationResult(null);
 }}
 />
