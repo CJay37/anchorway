@@ -1,4 +1,9 @@
+"use client"
+
+import { useState } from "react"
+
 import TransportActionPanel from "./TransportActionPanel"
+import type { CancellationResult } from "./CancelTransportPanel"
 export type TransportCardData = {
 tripReference: string;
 patientName: string;
@@ -58,11 +63,18 @@ return "GPS Unavailable"
 export default function TransportCard({
 transport,
 }: TransportCardProps) {
+const [cancellationResult, setCancellationResult] =
+useState<CancellationResult | null>(null);
+
+const currentCancellationStatus =
+cancellationResult?.cancellationStatus ??
+transport.cancellationStatus ??
+"Active"
 const isCancelled =
-transport.cancellationStatus === "Cancelled" ||
-transport.cancellationStatus === "Awaiting Reschedule" ||
-transport.cancellationStatus === "Completed Internally" ||
-transport.cancellationStatus === "Superseded"
+currentCancellationStatus === "Cancelled" ||
+currentCancellationStatus === "Awaiting Reschedule" ||
+currentCancellationStatus === "Completed Internally" ||
+currentCancellationStatus === "Superseded"
 
 return (
 <article
@@ -148,7 +160,7 @@ whiteSpace: "nowrap",
 }}
 >
 {isCancelled
-? transport.cancellationStatus
+? currentCancellationStatus
 : transport.healthStatus}
 </div>
 </div>
@@ -158,18 +170,52 @@ style={{
 marginTop: "16px",
 padding: "12px 14px",
 borderRadius: "12px",
-background: isCancelled ? "#fff7ed" : "#f8fafc",
+background: isCancelled ? "#fff7ed" : "#f8fafc", 
 color: isCancelled ? "#9a3412" : "#334155",
 fontSize: "14px",
 fontWeight: 700,
 }}
 >
 {isCancelled
-? `Transport status: ${transport.cancellationStatus}`
-: transport.status}
+? `Transport status: ${currentCancellationStatus}`
+: transport.status} 
 </div>
 </div>
+{cancellationResult && (
+<div
+style={{
+marginTop: "10px",
+padding: "12px 14px",
+borderRadius: "12px",
+border: "1px solid #fecaca",
+background: "#fef2f2",
+}}
+>
+<p
+style={{
+margin: 0,
+fontSize: "11px",
+fontWeight: 800,
+letterSpacing: "0.08em",
+textTransform: "uppercase",
+color: "#991b1b",
+}}
+>
+Cancellation Reason
+</p>
 
+<p
+style={{
+margin: "6px 0 0",
+fontSize: "14px",
+lineHeight: 1.5,
+color: "#7f1d1d",
+}}
+>
+{cancellationResult.reason}
+</p>
+</div>
+)}
 <div
 style={{
 display: "grid",
@@ -375,8 +421,11 @@ View Details
 </div>
 <TransportActionPanel
 tripReference={transport.tripReference}
-cancellationStatus={transport.cancellationStatus}
-/>
+cancellationStatus={currentCancellationStatus}
+onCancellationConfirmed={(result) => {
+setCancellationResult(result);
+}}
+/> 
 </article>
 );
 }
