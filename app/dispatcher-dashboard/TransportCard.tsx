@@ -425,7 +425,10 @@ cancellationStatus={currentCancellationStatus}
 onCancellationConfirmed={(result) => {
 setCancellationResult(result);
 }}
-/> 
+onRestartRequested={() => {
+setCancellationResult(null);
+}}
+/>
 </article>
 );
 }
